@@ -40,7 +40,7 @@
 | `/terminal-setup` | 安裝 Shift+Enter 換行等終端機設定 |
 | `/statusline 描述` | 自訂狀態列，例：`/statusline 顯示模型與 git 分支` |
 | `/theme`、`/output-style`、`/color`、`/tui`、`/keybindings` | 外觀與按鍵 |
-| `/import codex|gemini|cursor` | 從其他 AI 工具匯入設定 |
+| `/import codex`（或 gemini、cursor） | 從其他 AI 工具匯入設定 |
 | `/powerup` | 互動式小課程，學新功能 |
 
 ## 6.3 工作進行中
