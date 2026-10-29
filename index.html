@@ -1,0 +1,5729 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Code 完全新手教學（第二版）</title>
+<style>
+:root{--bg:#faf9f6;--panel:#fff;--ink:#1f1d1a;--muted:#6b665e;--line:#e6e1d8;--accent:#c2562f;--accent-soft:#f6e6de;--code-bg:#1e1f24;--code-ink:#e9e6df;--side:290px}
+html[data-theme="dark"]{--bg:#16171a;--panel:#1e2024;--ink:#ebe8e2;--muted:#a29d94;--line:#33363c;--accent:#e57a50;--accent-soft:#3a2a22;--code-bg:#0f1013}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16.5px/1.8 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+code,kbd,pre{font-family:"JetBrains Mono","SF Mono",Menlo,Consolas,monospace}
+:not(pre)>code{background:var(--accent-soft);padding:.1em .4em;border-radius:5px;font-size:.86em;word-break:break-word}
+kbd{display:inline-block;border:1px solid var(--line);border-bottom-width:2px;background:var(--panel);border-radius:5px;padding:0 .45em;font-size:.82em;line-height:1.6}
+#progress{position:fixed;top:0;left:0;height:3px;background:var(--accent);width:0;z-index:50}
+aside{position:fixed;top:0;left:0;bottom:0;width:var(--side);background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;z-index:20;transition:transform .25s}
+.brand{padding:18px 18px 10px;border-bottom:1px solid var(--line)}.brand b{font-size:17px;display:block}.brand small{color:var(--muted);font-size:12.5px;line-height:1.5;display:block;margin-top:4px}
+.tools{display:flex;gap:6px;padding:10px 14px;border-bottom:1px solid var(--line)}
+.tools input{flex:1;min-width:0;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:6px 10px;font-size:14px}
+.tools button,.menu-btn{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:4px 9px;cursor:pointer;font-size:14px}
+nav{overflow:auto;padding:8px 6px 30px;flex:1}
+nav a{display:block;color:var(--ink);padding:5px 12px;border-radius:7px;font-size:14px;line-height:1.45}
+nav a:hover{background:var(--accent-soft);text-decoration:none}nav a.active{background:var(--accent);color:#fff}
+main{margin-left:var(--side);padding:30px 48px 80px;max-width:calc(var(--side) + 1080px)}
+.menu-btn{display:none;position:fixed;top:10px;left:10px;z-index:30}
+@media (max-width:900px){aside{transform:translateX(-100%)}aside.open{transform:none;box-shadow:0 0 40px rgba(0,0,0,.3)}main{margin-left:0;padding:56px 16px 60px}.menu-btn{display:block}}
+.hero{background:linear-gradient(135deg,var(--accent-soft),var(--panel));border:1px solid var(--line);border-radius:18px;padding:28px 30px;margin-bottom:26px}
+.hero h1{margin:0 0 8px;font-size:30px;line-height:1.3}.hero p{margin:6px 0;color:var(--muted)}
+section{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:26px 30px;margin:0 0 26px;scroll-margin-top:12px}
+section.hidden{display:none}
+section h1{font-size:25px;margin:0 0 14px;line-height:1.35}
+section h2{font-size:20px;margin:28px 0 10px;padding-left:10px;border-left:4px solid var(--accent)}
+section h3{font-size:17px;margin:22px 0 8px}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14.5px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft);white-space:nowrap}
+td code{white-space:pre-wrap}
+#ch-08 td:first-child code{white-space:nowrap}
+#ch-08 td:nth-child(2){white-space:nowrap;font-size:13px}
+pre{position:relative;background:var(--code-bg);color:var(--code-ink);border-radius:12px;padding:16px 18px;overflow:auto;font-size:13.5px;line-height:1.6}
+pre code{background:none;padding:0;color:inherit}
+.copy{position:absolute;top:8px;right:8px;background:#2f3138;color:#ddd;border:1px solid #444;border-radius:6px;font-size:12px;padding:2px 8px;cursor:pointer;opacity:.75}
+blockquote{margin:14px 0;padding:10px 16px;border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:0 10px 10px 0}
+blockquote p{margin:4px 0}
+figure{margin:16px 0;text-align:center}
+figure img{max-width:100%;border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,.12);cursor:zoom-in}
+figcaption{color:var(--muted);font-size:13.5px;margin-top:6px}
+sub{color:var(--muted)}
+.markdone{float:right;font-size:13px;color:var(--muted);font-weight:400;cursor:pointer;margin-left:10px}
+#lightbox{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:100;cursor:zoom-out}
+#lightbox img{max-width:96vw;max-height:94vh;border-radius:8px}
+footer{color:var(--muted);font-size:13.5px;text-align:center;margin-top:30px}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<button class="menu-btn" onclick="document.querySelector('aside').classList.toggle('open')">☰ 目錄</button>
+<aside>
+  <div class="brand"><b>Claude Code 完全新手教學</b><small>第二版・資料截至 2026/10/29・v2.1.312</small></div>
+  <div class="tools"><input id="q" type="search" placeholder="搜尋內容…" aria-label="搜尋"><button id="theme" title="切換深色/淺色">🌓</button></div>
+  <nav id="toc"><a href="#ch-01">第 1 章 先搞懂基本觀念（給完全新手）</a>
+<a href="#ch-02">第 2 章 Chat 與 Code 差在哪？Claude 有哪些用法？</a>
+<a href="#ch-03">第 3 章 安裝、登入與第一次啟動</a>
+<a href="#ch-04">第 4 章 手把手：你的第一個 Claude Code 工作流程</a>
+<a href="#ch-05">第 5 章 介面導覽與快捷鍵</a>
+<a href="#ch-06">第 6 章 斜線指令大全</a>
+<a href="#ch-07">第 7 章 /config 設定面板：每個選項逐一說明</a>
+<a href="#ch-08">第 8 章 settings.json：所有設定項目逐一說明</a>
+<a href="#ch-09">第 9 章 權限、Auto mode 與沙盒</a>
+<a href="#ch-10">第 10 章 模型、推理強度、Fast mode 與 Context 管理</a>
+<a href="#ch-11">第 11 章 記憶：CLAUDE.md、Rules、AGENTS.md 與自動記憶</a>
+<a href="#ch-12">第 12 章 擴充 Claude Code：Skills、Subagents、Hooks、MCP、Plugins、Mods</a>
+<a href="#ch-13">第 13 章 進階：平行工作、自動化、雲端與程式碼審查</a>
+<a href="#ch-14">第 14 章 命令列參數與環境變數</a>
+<a href="#ch-15">第 15 章 疑難排解、最佳實踐與新功能時間軸</a></nav>
+</aside>
+<main>
+<div class="hero">
+  <h1>Claude Code 完全新手教學（第二版）</h1>
+  <p>從「什麼是 session」講起，到設定面板每個選項、settings.json 全部 245 個設定項目，都附說明、例子與真實截圖。</p>
+  <p>版本基準：Claude Code v2.1.312（2026/10/27）・預設模型 Claude Opus 5.5・點擊圖片可放大</p>
+</div>
+<section id="ch-01" data-title="第 1 章　先搞懂基本觀念（給完全新手）"><h1>第 1 章　先搞懂基本觀念（給完全新手）</h1>
+<blockquote>
+<p>這一章不需要動手，只要讀懂。後面所有操作都建立在這些觀念上。讀完你會知道「session、context、token、工具、權限、模型」這些詞在講什麼。</p>
+</blockquote>
+<h2>1.1 Claude 是什麼？Claude Code 又是什麼？</h2>
+<p><strong>Claude</strong> 是 Anthropic 公司開發的 AI 助手。你可以把它想成一位很聰明、讀過大量資料、會寫程式也會寫文章的同事。</p>
+<p><strong>Claude Code</strong> 是「讓 Claude 直接在你的電腦上幫你寫程式」的工具。一般的聊天 AI 只能<strong>回答</strong>你，你還得自己把程式碼複製貼上；Claude Code 則可以：</p>
+<ul>
+<li>自己打開、閱讀你專案裡的檔案</li>
+<li>直接修改程式碼</li>
+<li>在終端機執行指令（安裝套件、跑測試、啟動伺服器）</li>
+<li>使用 git（看差異、建立分支、commit）</li>
+<li>上網查文件</li>
+</ul>
+<p>這種「會自己動手做事」的 AI，叫做 <strong>AI 代理（agent）</strong>。</p>
+<blockquote>
+<p>💡 <strong>比喻</strong>：一般聊天 AI 像是「電話另一頭的顧問」，只能口頭建議；Claude Code 像是「坐在你旁邊、可以用你電腦的實習工程師」，會實際操作，但重要動作會先問你。</p>
+</blockquote>
+<h2>1.2 Claude Code 怎麼工作？——「代理迴圈」</h2>
+<p>你下一個指令後，Claude Code 會重複這個循環，直到任務完成：</p>
+<pre><code>你的需求 → Claude 思考下一步 → 呼叫工具（讀檔／改檔／跑指令）
+       → 看工具的結果 → 再思考 → …… → 回報結果給你
+</code></pre>
+<p>下圖是真實畫面：我們問「這個專案在做什麼？」，Claude 先說要讀檔（<code>Read 2 files</code>），讀完後才回答。</p>
+<p><figure><img loading="lazy" alt="Claude 先讀檔再回答" src="images/41-answer.png"><figcaption>Claude 先讀檔再回答</figcaption></figure></p>
+<p>按 <kbd>Ctrl+O</kbd> 可以看到每一步的細節（讀了哪個檔、讀了幾行）：</p>
+<p><figure><img loading="lazy" alt="Ctrl+O 顯示詳細過程" src="images/42-transcript.png"><figcaption>Ctrl+O 顯示詳細過程</figcaption></figure></p>
+<h2>1.3 Session（工作階段）是什麼？</h2>
+<p><strong>Session = 一段連續的對話</strong>，包含你說過的話、Claude 的回覆、它做過的所有動作。</p>
+<table>
+<thead>
+<tr>
+<th>你可以這樣想</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>一個 session 就像一本「工作筆記本」</td>
+<td>從你輸入 <code>claude</code> 開始，到你離開或 <code>/clear</code> 為止，都寫在同一本</td>
+</tr>
+<tr>
+<td>每次 <code>claude</code> 都會開一本新筆記本</td>
+<td>舊筆記本會保存在電腦裡（預設 30 天），可以用 <code>/resume</code> 或 <code>claude -c</code> 翻回來</td>
+</tr>
+<tr>
+<td>同一個資料夾可以有很多本</td>
+<td>例如「修登入 bug」一本、「寫新功能」一本，互不干擾</td>
+</tr>
+</tbody>
+</table>
+<p>常用的 session 操作：</p>
+<table>
+<thead>
+<tr>
+<th>想做的事</th>
+<th>怎麼做</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>開始新 session</td>
+<td>在專案資料夾輸入 <code>claude</code></td>
+</tr>
+<tr>
+<td>回到最近一次的對話</td>
+<td><code>claude -c</code>（continue）</td>
+</tr>
+<tr>
+<td>從清單挑一個舊對話</td>
+<td><code>claude -r</code> 或在 session 中輸入 <code>/resume</code></td>
+</tr>
+<tr>
+<td>幫 session 取名字</td>
+<td><code>/rename 登入功能</code>，之後 <code>claude -r 登入功能</code> 就能找回</td>
+</tr>
+<tr>
+<td>換一個新任務、清空對話</td>
+<td><code>/clear</code>（舊對話仍可 <code>/resume</code> 找回）</td>
+</tr>
+<tr>
+<td>從某一點分岔出另一條路</td>
+<td><code>/branch</code></td>
+</tr>
+</tbody>
+</table>
+<p>下圖是 <code>/resume</code> 的選單，可以看到之前的 session（含名稱、時間、git 分支、大小）：</p>
+<p><figure><img loading="lazy" alt="/resume 選單" src="images/33-resume.png"><figcaption>/resume 選單</figcaption></figure></p>
+<blockquote>
+<p>📌 <strong>重點</strong>：Claude 在新 session 中<strong>不會記得</strong>上一個 session 的對話內容。要讓它「每次都知道」的事，請寫進 <code>CLAUDE.md</code>（第 11 章）。</p>
+</blockquote>
+<h2>1.4 回合（Turn）</h2>
+<p>你送出一則訊息，到 Claude 回覆完畢並停下來等你，叫做<strong>一個回合</strong>。一個回合裡 Claude 可能會呼叫好幾次工具。回合結束時你會看到類似 <code>✻ Crunched for 12s</code> 的耗時提示。</p>
+<p>在 Claude 工作中，你仍然可以繼續輸入，訊息會<strong>排隊</strong>，等這個回合結束再送出；要立刻打斷，按 <kbd>Esc</kbd>。</p>
+<h2>1.5 Context（上下文）與 Context window（上下文視窗）</h2>
+<p><strong>Context</strong> 是 Claude「此刻腦中能看到的所有東西」：系統說明、你的 CLAUDE.md、對話歷史、讀過的檔案內容、指令輸出……</p>
+<p><strong>Context window</strong> 是這個容量的上限。目前 Claude 的主力模型有 <strong>100 萬 token</strong> 的視窗。</p>
+<blockquote>
+<p>💡 <strong>比喻</strong>：context window 像一張辦公桌。桌子很大，但東西堆太多，重要文件就容易被淹沒，Claude 的表現也會下降；而且桌上東西越多，每次「看一遍」的成本也越高。</p>
+</blockquote>
+<p>用 <code>/context</code> 可以看到桌上目前放了什麼、還剩多少空間：</p>
+<p><figure><img loading="lazy" alt="/context 顯示 context 使用量" src="images/32-context.png"><figcaption>/context 顯示 context 使用量</figcaption></figure></p>
+<p>當 context 快滿時，Claude Code 會<strong>自動壓縮（auto-compact）</strong>：把較早的對話摘要成短短一段，騰出空間。你也可以手動 <code>/compact</code>。</p>
+<h2>1.6 Token 是什麼？</h2>
+<p><strong>Token</strong> 是 AI 計算文字量的單位，大約是：英文 1 個單字 ≈ 1～1.3 token；中文 1 個字 ≈ 1～2 token。</p>
+<p>Token 和兩件事有關：</p>
+<ol>
+<li><strong>容量</strong>：context window 以 token 計算。</li>
+<li><strong>費用／額度</strong>：用 API 付費是依 token 計價（例如 Opus 5.5 每百萬輸入 token 4 美元）；用訂閱方案則是消耗你的 5 小時與每週用量額度。</li>
+</ol>
+<p><code>/usage</code> 可以看本次花費與方案額度：</p>
+<p><figure><img loading="lazy" alt="/config 的 Usage 分頁" src="images/12-usage.png"><figcaption>/config 的 Usage 分頁</figcaption></figure></p>
+<h2>1.7 工具（Tools）</h2>
+<p>Claude 本身只會「想」和「說」，要動手就得透過<strong>工具</strong>。常見工具：</p>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>做什麼</th>
+<th>需要權限嗎</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Read</td>
+<td>讀取檔案</td>
+<td>通常不用</td>
+</tr>
+<tr>
+<td>Glob／Grep</td>
+<td>找檔案、搜尋文字</td>
+<td>通常不用</td>
+</tr>
+<tr>
+<td>Edit／Write</td>
+<td>修改／建立檔案</td>
+<td>預設要問你</td>
+</tr>
+<tr>
+<td>Bash（Windows 為 PowerShell）</td>
+<td>執行終端機指令</td>
+<td>預設要問你</td>
+</tr>
+<tr>
+<td>WebFetch／WebSearch</td>
+<td>讀網頁、搜尋網路</td>
+<td>視網站而定</td>
+</tr>
+<tr>
+<td>Agent</td>
+<td>派一個「子代理」去做子任務</td>
+<td>視情況</td>
+</tr>
+</tbody>
+</table>
+<h2>1.8 權限（Permissions）：Claude 什麼時候會先問你？</h2>
+<p>因為 Claude 能改你的檔案、跑指令，所以有<strong>權限系統</strong>保護你。當它要做有風險的事，會跳出確認框：</p>
+<p><figure><img loading="lazy" alt="Claude 要修改檔案前，先給你看差異並詢問" src="images/43-edit-permission.png"><figcaption>Claude 要修改檔案前，先給你看差異並詢問</figcaption></figure></p>
+<p>上圖中紅色是要刪除的行、綠色是要新增的行。你可以選：</p>
+<ul>
+<li><strong>1. Yes</strong>：只允許這一次</li>
+<li><strong>2. Yes, and switch to accept edits</strong>：這個 session 之後的修改都自動允許</li>
+<li><strong>3. No</strong>：拒絕（可以再告訴 Claude 你想怎麼改）</li>
+</ul>
+<p>要跑指令時也一樣：</p>
+<p><figure><img loading="lazy" alt="執行 npm test 前的確認" src="images/45-bash-permission.png"><figcaption>執行 npm test 前的確認</figcaption></figure></p>
+<p>「Yes, and don't ask again for: npm test *」會把這條規則記住，以後同類指令不再問。</p>
+<p><strong>權限模式</strong>決定「問的頻率」，按 <kbd>Shift+Tab</kbd> 切換（第 9 章詳解）：</p>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>一句話說明</th>
+<th>適合</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual（手動）</td>
+<td>除了讀取，什麼都先問</td>
+<td>剛開始用、重要專案</td>
+</tr>
+<tr>
+<td>Accept edits（自動接受編輯）</td>
+<td>改檔不問，跑指令會問</td>
+<td>信任方向、想快一點</td>
+</tr>
+<tr>
+<td>Plan（規劃）</td>
+<td>只研究不修改，先給你計畫</td>
+<td>大改動之前</td>
+</tr>
+<tr>
+<td>Auto（自動）</td>
+<td>由安全分類器把關，低風險直接做、高風險擋下</td>
+<td>目前互動模式的預設</td>
+</tr>
+</tbody>
+</table>
+<h2>1.9 模型（Model）與推理強度（Effort）</h2>
+<ul>
+<li><strong>模型</strong>是 Claude 的「大腦型號」。目前有 Opus 5.5（預設，聰明且相對便宜）、Sonnet 5.5（快又便宜）、Haiku 5.5（最快最便宜）、Fable 5.1（最強也最貴，需權限）。用 <code>/model</code> 切換。</li>
+<li><strong>Effort</strong> 是「這次要想多深」：low → medium → high → xhigh → max。越高越仔細但越慢、越耗額度。Opus 5.5 預設 medium。用 <code>/effort</code> 調整。</li>
+</ul>
+<p><figure><img loading="lazy" alt="/model 選單：可以看到各模型與價格" src="images/17-model.png"><figcaption>/model 選單：可以看到各模型與價格</figcaption></figure></p>
+<h2>1.10 CLAUDE.md：給 Claude 的「專案說明書」</h2>
+<p>每次開新 session，Claude 都是「第一天上班」。<code>CLAUDE.md</code> 是放在專案根目錄的 Markdown 檔，Claude 每次啟動都會先讀，就像新同事的入職手冊。裡面寫：怎麼安裝、怎麼跑測試、程式風格、哪些檔案不能動……</p>
+<p>輸入 <code>/init</code> 讓 Claude 自動幫你產生第一版。詳見第 11 章。</p>
+<h2>1.11 檢查點（Checkpoint）與回溯（Rewind）</h2>
+<p>Claude 每次改檔前都會自動存檔。改壞了？在空白輸入框連按兩下 <kbd>Esc</kbd>（或輸入 <code>/rewind</code>），選擇要回到哪一步：</p>
+<p><figure><img loading="lazy" alt="Rewind 選單：可以回到任何一則訊息之前" src="images/46-rewind.png"><figcaption>Rewind 選單：可以回到任何一則訊息之前</figcaption></figure></p>
+<p><figure><img loading="lazy" alt="選擇還原程式碼、對話，或兩者都還原" src="images/47-rewind-options.png"><figcaption>選擇還原程式碼、對話，或兩者都還原</figcaption></figure></p>
+<blockquote>
+<p>⚠️ 用 Bash 指令改的檔案（例如 <code>sed -i</code>、<code>rm</code>）不在檢查點裡，無法還原。重要專案請搭配 git 使用。</p>
+</blockquote>
+<h2>1.12 名詞速查表</h2>
+<table>
+<thead>
+<tr>
+<th>名詞</th>
+<th>白話解釋</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Session</td>
+<td>一段連續對話（一本筆記本）</td>
+</tr>
+<tr>
+<td>Turn（回合）</td>
+<td>你說一次 → Claude 做完一次</td>
+</tr>
+<tr>
+<td>Context</td>
+<td>Claude 此刻看得到的全部內容</td>
+</tr>
+<tr>
+<td>Context window</td>
+<td>Context 的容量上限</td>
+</tr>
+<tr>
+<td>Token</td>
+<td>計算文字量與費用的單位</td>
+</tr>
+<tr>
+<td>Compact（壓縮）</td>
+<td>把舊對話摘要以騰出空間</td>
+</tr>
+<tr>
+<td>Tool（工具）</td>
+<td>Claude 動手做事的方法（讀檔、改檔、跑指令）</td>
+</tr>
+<tr>
+<td>Permission mode</td>
+<td>決定 Claude 何時要先問你</td>
+</tr>
+<tr>
+<td>Model</td>
+<td>Claude 的大腦型號</td>
+</tr>
+<tr>
+<td>Effort</td>
+<td>這次要想多深</td>
+</tr>
+<tr>
+<td>CLAUDE.md</td>
+<td>專案說明書，每次自動讀</td>
+</tr>
+<tr>
+<td>Skill</td>
+<td>可重複使用的專業流程說明書（<code>/名稱</code> 呼叫）</td>
+</tr>
+<tr>
+<td>Subagent（子代理）</td>
+<td>Claude 派出去做子任務的分身</td>
+</tr>
+<tr>
+<td>Hook</td>
+<td>在特定時機自動執行的腳本</td>
+</tr>
+<tr>
+<td>MCP</td>
+<td>讓 Claude 連到外部工具（GitHub、資料庫…）的標準</td>
+</tr>
+<tr>
+<td>Plugin</td>
+<td>把以上擴充功能打包分享的套件</td>
+</tr>
+<tr>
+<td>Worktree</td>
+<td>git 的「同一個 repo 開多個工作資料夾」功能，讓多個 Claude 平行工作不互相干擾</td>
+</tr>
+</tbody>
+</table></section>
+<section id="ch-02" data-title="第 2 章　Chat 與 Code 差在哪？Claude 有哪些用法？"><h1>第 2 章　Chat 與 Code 差在哪？Claude 有哪些用法？</h1>
+<blockquote>
+<p>很多人第一次打開 Claude 桌面版會看到「Chat」和「Code」兩個分頁，不知道該用哪個。這章幫你一次弄清楚。</p>
+</blockquote>
+<h2>2.1 一張表看懂</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><strong>Chat（聊天）</strong></th>
+<th><strong>Code（Claude Code）</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>本質</td>
+<td>和 Claude 對話、一起思考與寫作</td>
+<td>讓 Claude 在你的<strong>程式專案資料夾</strong>裡直接動手</td>
+</tr>
+<tr>
+<td>能碰到你的檔案嗎</td>
+<td>只能看你<strong>上傳</strong>的檔案</td>
+<td>可以讀寫整個專案資料夾</td>
+</tr>
+<tr>
+<td>能執行指令嗎</td>
+<td>不能在你電腦上執行</td>
+<td>可以（安裝套件、跑測試、git…）</td>
+</tr>
+<tr>
+<td>成果在哪</td>
+<td>對話中的回答、文件、artifact 網頁</td>
+<td>直接改好的程式碼、commit、PR</td>
+</tr>
+<tr>
+<td>適合</td>
+<td>問問題、寫文章／信、分析資料、研究、腦力激盪、學概念</td>
+<td>寫程式、修 bug、重構、寫測試、自動化、整理專案</td>
+</tr>
+<tr>
+<td>用到的設定</td>
+<td>claude.ai 設定（個人偏好、記憶、connectors）</td>
+<td><code>~/.claude/settings.json</code>、CLAUDE.md 等（本教學主要內容）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 <strong>簡單判斷法</strong>：「我要的東西最後是<strong>一段文字／一份文件</strong>」→ Chat；「我要的東西最後是<strong>改好的程式碼／一個能跑的專案</strong>」→ Code。</p>
+</blockquote>
+<p>同一個訂閱方案（Pro、Max、Team、Enterprise）的用量額度由 Chat 與 Claude Code 共用。</p>
+<h2>2.2 Chat 能做的事</h2>
+<ul>
+<li><strong>一般對話</strong>：問答、解釋觀念、翻譯、寫作、改稿。</li>
+<li><strong>上傳檔案分析</strong>：PDF、Word、Excel、圖片、程式碼。</li>
+<li><strong>Artifacts</strong>：讓 Claude 產生可分享的網頁、文件、簡報、試算表。</li>
+<li><strong>Projects（專案）</strong>：把相關資料與指示集中，所有對話共用。</li>
+<li><strong>研究（Research）與網路搜尋</strong>：查最新資訊並附來源。</li>
+<li><strong>Connectors</strong>：連 Google Drive、Gmail、Slack、Notion 等，讓 Claude 讀你自己的資料。</li>
+<li><strong>記憶</strong>：記住你的偏好與背景，下次對話自動帶入。</li>
+</ul>
+<p>適合「還沒進入寫程式階段」的事，例如：先在 Chat 討論架構與需求，確定後再到 Code 實作。</p>
+<h2>2.3 Code 的各種入口</h2>
+<p>Claude Code 不只一種用法，以下都是同一套 Claude Code，<strong>共用相同的設定檔</strong>（雲端 session 例外）：</p>
+<table>
+<thead>
+<tr>
+<th>入口</th>
+<th>長什麼樣子</th>
+<th>適合誰</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>終端機（CLI）</strong></td>
+<td>在終端機輸入 <code>claude</code></td>
+<td>功能最完整，本教學截圖都來自這裡</td>
+</tr>
+<tr>
+<td><strong>桌面版 Code 分頁</strong></td>
+<td>Claude 桌面 App 中的 Code 分頁，有圖形介面</td>
+<td>不熟終端機的新手、喜歡視覺化 diff 的人</td>
+</tr>
+<tr>
+<td><strong>VS Code / Cursor 擴充</strong></td>
+<td>編輯器側邊的聊天面板</td>
+<td>平常就用 VS Code 的人</td>
+</tr>
+<tr>
+<td><strong>JetBrains 外掛</strong></td>
+<td>IntelliJ、PyCharm 等</td>
+<td>JetBrains 使用者</td>
+</tr>
+<tr>
+<td><strong>網頁版（claude.ai/code）</strong></td>
+<td>在 Anthropic 雲端執行，關掉電腦也繼續跑</td>
+<td>長任務、手機上派工</td>
+</tr>
+<tr>
+<td><strong>手機 App</strong></td>
+<td>遠端遙控電腦上的 session，或開雲端 session</td>
+<td>外出時查看進度</td>
+</tr>
+<tr>
+<td><strong>Slack</strong></td>
+<td>在頻道 @Claude 派工</td>
+<td>團隊協作</td>
+</tr>
+<tr>
+<td><strong>GitHub Actions</strong></td>
+<td>在 PR／issue 中 <code>@claude</code></td>
+<td>自動化審查、修 bug</td>
+</tr>
+</tbody>
+</table>
+<h2>2.4 桌面版 Code 分頁介面導覽</h2>
+<p>桌面版把終端機的功能做成按鈕與面板，主要元素：</p>
+<table>
+<thead>
+<tr>
+<th>介面元素</th>
+<th>位置</th>
+<th>功能</th>
+<th>對應 CLI 操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>+ New</strong>（或 Ctrl+N／Cmd+N）</td>
+<td>左側欄上方</td>
+<td>開新 session</td>
+<td>執行 <code>claude</code></td>
+</tr>
+<tr>
+<td><strong>Session 清單</strong></td>
+<td>左側欄</td>
+<td>所有對話，可同時跑多個</td>
+<td><code>/resume</code>、Agent view</td>
+</tr>
+<tr>
+<td><strong>環境選擇器</strong></td>
+<td>輸入框下方第一個</td>
+<td>在哪裡執行：<strong>Local</strong>（本機）、<strong>Cloud</strong>（雲端）、<strong>SSH</strong>（遠端主機）、<strong>WSL</strong>（Windows）</td>
+<td><code>--cloud</code> 等</td>
+</tr>
+<tr>
+<td><strong>資料夾選擇</strong></td>
+<td>輸入框下方</td>
+<td>選要工作的專案資料夾</td>
+<td><code>cd 專案</code></td>
+</tr>
+<tr>
+<td><strong>權限模式選擇器</strong></td>
+<td>輸入框下方</td>
+<td>Manual／Accept edits／Plan／Auto／Bypass</td>
+<td><kbd>Shift+Tab</kbd>（桌面版用 Ctrl/Cmd+Shift+M）</td>
+</tr>
+<tr>
+<td><strong>模型選擇</strong></td>
+<td>輸入框下方</td>
+<td>切換模型</td>
+<td><code>/model</code></td>
+</tr>
+<tr>
+<td><strong>Worktree 按鈕</strong></td>
+<td>開始 session 前</td>
+<td>在獨立 git worktree 中工作</td>
+<td><code>claude -w</code></td>
+</tr>
+<tr>
+<td><strong>Changes（差異）面板</strong></td>
+<td>標題列／Ctrl/Cmd+Shift+D</td>
+<td>檢視改動、在行上留言請 Claude 修</td>
+<td><code>/diff</code></td>
+</tr>
+<tr>
+<td><strong>Browser 面板</strong></td>
+<td>Ctrl/Cmd+Shift+B</td>
+<td>內建瀏覽器，Claude 可開 dev server 驗證畫面</td>
+<td><code>--chrome</code></td>
+</tr>
+<tr>
+<td><strong>Terminal 面板</strong></td>
+<td>Ctrl+`</td>
+<td>與 session 共用環境的終端機</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Files、Plan、Background tasks 面板</strong></td>
+<td>標題列 ⋮</td>
+<td>檔案編輯、計畫、背景工作</td>
+<td><code>/tasks</code></td>
+</tr>
+<tr>
+<td><strong>iOS Simulator 面板</strong></td>
+<td>（macOS）</td>
+<td>讓 Claude 操作模擬器測試 App</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Settings → Code（或 Claude Code）</strong></td>
+<td>設定頁</td>
+<td>提示建議、Worktree 位置與分支前綴、合併後自動封存、Remote Control、電腦操作等</td>
+<td><code>/config</code></td>
+</tr>
+</tbody>
+</table>
+<p>桌面版與 CLI 的差異：</p>
+<ul>
+<li>桌面版沒有 <code>dontAsk</code> 模式；<code>/config</code> 在桌面版會開啟設定頁而不是終端機選單。</li>
+<li>桌面版會自行設定部分環境變數（例如本機 session 的 API 逾時），所以在設定檔改這些變數可能無效。</li>
+<li>雲端 session 只支援 Accept edits、Plan、Auto 三種模式。</li>
+<li>桌面版的 <code>.claude/launch.json</code> 可設定 dev server，讓 Claude 自動開瀏覽器驗證改動。</li>
+</ul>
+<blockquote>
+<p>📷 <strong>關於截圖</strong>：桌面 App 無法被自動化工具控制，本教學的截圖皆擷取自同版本（v2.1.312）的終端機 CLI。桌面版的對話內容、權限詢問、差異顯示與 CLI 是同一套引擎，看懂 CLI 畫面，桌面版自然看得懂。</p>
+</blockquote>
+<h2>2.5 Claude Code 能幫你做什麼？（實際例子）</h2>
+<table>
+<thead>
+<tr>
+<th>類型</th>
+<th>你可以這樣說</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>理解專案</td>
+<td>「這個專案在做什麼？入口在哪？畫出資料流」</td>
+</tr>
+<tr>
+<td>修 bug</td>
+<td>「使用者輸入錯誤密碼後畫面空白，幫我找原因並修好」</td>
+</tr>
+<tr>
+<td>新功能</td>
+<td>「在註冊表單加上 email 格式驗證，並寫測試」</td>
+</tr>
+<tr>
+<td>重構</td>
+<td>「把 auth 模組從 callback 改成 async/await」</td>
+</tr>
+<tr>
+<td>測試</td>
+<td>「幫 utils/ 底下沒有測試的函式補上單元測試」</td>
+</tr>
+<tr>
+<td>Git</td>
+<td>「幫我寫 commit 訊息」「解這個 merge conflict」「開 PR」</td>
+</tr>
+<tr>
+<td>文件</td>
+<td>「依目前程式更新 README 的安裝說明」</td>
+</tr>
+<tr>
+<td>自動化</td>
+<td>「每天早上檢查 CI 狀態並整理失敗原因」</td>
+</tr>
+<tr>
+<td>非程式工作</td>
+<td>整理資料夾、批次改檔名、處理 CSV、寫腳本</td>
+</tr>
+</tbody>
+</table>
+<h2>2.6 其他你該知道的基礎知識</h2>
+<ul>
+<li><strong>終端機（Terminal）</strong>：輸入文字指令操作電腦的視窗。macOS 是「終端機」App；Windows 是 PowerShell 或 Windows Terminal。第 3 章會教最基本的操作。</li>
+<li><strong>專案資料夾</strong>：Claude Code 以「你啟動它的資料夾」為工作範圍。請先 <code>cd</code> 到你的專案再執行 <code>claude</code>。</li>
+<li><strong>Git</strong>：版本控制工具，能記錄每次修改、隨時還原。強烈建議專案都用 git 管理，Claude 改壞了可以輕鬆回復。</li>
+<li><strong>訂閱 vs API</strong>：用 claude.ai 訂閱登入，費用包含在月費內（有額度上限）；用 Claude Console API key，則依 token 用量計費。</li>
+<li><strong>安全意識</strong>：Claude Code 能執行指令，請只在你信任的資料夾使用；不要把密碼、金鑰寫在對話裡；重要操作仔細看確認框。</li>
+</ul></section>
+<section id="ch-03" data-title="第 3 章　安裝、登入與第一次啟動"><h1>第 3 章　安裝、登入與第一次啟動</h1>
+<h2>3.1 終端機 30 秒入門</h2>
+<p>Claude Code 主要在<strong>終端機</strong>中使用。你只需要會三件事：</p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>作用</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cd 路徑</code></td>
+<td>進入某個資料夾</td>
+<td><code>cd ~/projects/my-app</code>（Windows：<code>cd C:\Users\你\projects\my-app</code>）</td>
+</tr>
+<tr>
+<td><code>ls</code>（Windows PowerShell 也可用 <code>dir</code>）</td>
+<td>列出目前資料夾內容</td>
+<td><code>ls</code></td>
+</tr>
+<tr>
+<td><code>pwd</code></td>
+<td>顯示目前在哪個資料夾</td>
+<td><code>pwd</code></td>
+</tr>
+</tbody>
+</table>
+<p>開啟方式：macOS 按 <kbd>Cmd+Space</kbd> 搜尋「終端機」；Windows 按 <kbd>Win</kbd> 搜尋「PowerShell」或「Terminal」。</p>
+<blockquote>
+<p>💡 不想用終端機？可以直接用 Claude 桌面版的 <strong>Code</strong> 分頁（第 2 章），概念完全相同。</p>
+</blockquote>
+<h2>3.2 安裝</h2>
+<p>需要：一個 Claude 訂閱（Pro／Max／Team／Enterprise）或 Claude Console 帳號。</p>
+<p><strong>macOS／Linux／WSL：</strong></p>
+<pre><code class="language-bash">curl -fsSL https://claude.ai/install.sh | bash
+</code></pre>
+<p><strong>Windows PowerShell（提示字元是 <code>PS C:\&gt;</code>）：</strong></p>
+<pre><code class="language-powershell">irm https://claude.ai/install.ps1 | iex
+</code></pre>
+<p><strong>Windows CMD（提示字元是 <code>C:\&gt;</code>）：</strong></p>
+<pre><code class="language-batch">curl -fsSL https://claude.ai/install.cmd -o install.cmd &amp;&amp; install.cmd &amp;&amp; del install.cmd
+</code></pre>
+<blockquote>
+<p>原生安裝版會在背景<strong>自動更新</strong>。也可用 <code>brew install --cask claude-code</code>（macOS）或 <code>winget install Anthropic.ClaudeCode</code>（Windows），但這兩種不會自動更新。</p>
+</blockquote>
+<p>裝好後<strong>開一個新的終端機視窗</strong>，確認版本：</p>
+<pre><code class="language-bash">claude --version
+# 2.1.312 (Claude Code)
+</code></pre>
+<p>Windows 建議另外安裝 <a href="https://git-scm.com/downloads/win">Git for Windows</a>，Claude 才能使用 Bash 工具；沒裝的話會改用 PowerShell。</p>
+<h3>常見安裝問題</h3>
+<table>
+<thead>
+<tr>
+<th>狀況</th>
+<th>解法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>claude: command not found</code></td>
+<td>關掉終端機重開；仍不行請依官方「Troubleshoot installation」把安裝路徑加入 PATH</td>
+</tr>
+<tr>
+<td><code>'irm' is not recognized</code></td>
+<td>你在 CMD，請改用 CMD 的那行指令或打開 PowerShell</td>
+</tr>
+<tr>
+<td><code>The token '&amp;&amp;' is not a valid statement separator</code></td>
+<td>你在 PowerShell，請改用 PowerShell 的那行</td>
+</tr>
+</tbody>
+</table>
+<h2>3.3 第一次啟動</h2>
+<pre><code class="language-bash">cd 你的專案資料夾
+claude
+</code></pre>
+<p>第一次會引導你在瀏覽器登入。登入方式：</p>
+<ul>
+<li><strong>Claude 訂閱</strong>（推薦）：用量含在月費。</li>
+<li><strong>Claude Console</strong>：API 預付，依用量計費。</li>
+<li><strong>公司的雲端供應商</strong>（Bedrock、Vertex、Foundry）或公司閘道：依公司指示。</li>
+</ul>
+<h3>信任資料夾</h3>
+<p>在一個新資料夾第一次啟動時，會問你是否信任這個資料夾：</p>
+<p><figure><img loading="lazy" alt="信任資料夾對話框" src="images/01-trust.png"><figcaption>信任資料夾對話框</figcaption></figure></p>
+<p>選 <strong>Yes, I trust this folder</strong>。只有你自己的專案、知名開源專案或團隊專案才該信任；陌生人給的資料夾請先檢查內容（裡面的設定檔可能讓 Claude 執行指令）。</p>
+<h3>主畫面</h3>
+<p><figure><img loading="lazy" alt="Claude Code 主畫面" src="images/03-welcome.png"><figcaption>Claude Code 主畫面</figcaption></figure></p>
+<table>
+<thead>
+<tr>
+<th>區域</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>左上 Logo 旁</td>
+<td>版本、目前模型（Opus 5.5）、帳號類型、工作資料夾</td>
+</tr>
+<tr>
+<td>中間</td>
+<td>對話區（目前顯示 Auto mode 已成為預設的說明）</td>
+</tr>
+<tr>
+<td><code>◐ medium · /effort</code></td>
+<td>目前推理強度，可用 <code>/effort</code> 調整</td>
+</tr>
+<tr>
+<td><code>❯</code> 輸入框</td>
+<td>在這裡打字；灰色字是建議範例</td>
+</tr>
+<tr>
+<td>最下方狀態列</td>
+<td>目前權限模式（<code>⏵⏵ auto mode on</code>）與提示（<code>shift+tab to cycle</code>、<code>← for agents</code>）</td>
+</tr>
+</tbody>
+</table>
+<h2>3.4 更新與版本</h2>
+<table>
+<thead>
+<tr>
+<th>想做的事</th>
+<th>指令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>手動更新到最新版</td>
+<td><code>claude update</code></td>
+</tr>
+<tr>
+<td>查看新版本有什麼</td>
+<td>session 中輸入 <code>/release-notes</code></td>
+</tr>
+<tr>
+<td>改用較穩定的頻道</td>
+<td><code>/config</code> → Auto-update channel → stable</td>
+</tr>
+<tr>
+<td>安裝特定版本</td>
+<td><code>claude install 2.1.300</code></td>
+</tr>
+<tr>
+<td>診斷安裝問題</td>
+<td><code>claude doctor</code>（終端機）或 <code>/doctor</code>（session 中）</td>
+</tr>
+</tbody>
+</table>
+<h2>3.5 從其他 AI 工具搬家</h2>
+<p>用過 Codex、Gemini CLI 或 Cursor？可以一鍵匯入它們的設定（指示檔、MCP、指令、subagent、skills）：</p>
+<pre><code class="language-bash">claude import cursor --dry-run   # 先預覽
+/import codex                    # 在 session 中匯入
+</code></pre></section>
+<section id="ch-04" data-title="第 4 章　手把手：你的第一個 Claude Code 工作流程"><h1>第 4 章　手把手：你的第一個 Claude Code 工作流程</h1>
+<blockquote>
+<p>本章用一個小小的待辦事項 API 專案（<code>demo-todo</code>）示範從「看懂專案」到「修改、測試、檢查、回溯」的完整流程。所有截圖都是真實畫面。</p>
+</blockquote>
+<h2>4.1 準備：建立 CLAUDE.md</h2>
+<p>進入專案後，第一件事建議執行：</p>
+<pre><code>/init
+</code></pre>
+<p>Claude 會分析專案並產生 <code>CLAUDE.md</code>（專案說明書），裡面記錄建置指令、測試方式、程式風格。以後每次開 session 都會自動讀它。</p>
+<h2>4.2 第一步：先讓 Claude 讀懂專案</h2>
+<p>在輸入框打字（中文完全沒問題）：</p>
+<p><figure><img loading="lazy" alt="輸入第一個問題" src="images/40-typing.png"><figcaption>輸入第一個問題</figcaption></figure></p>
+<p>按 <kbd>Enter</kbd> 送出。Claude 會先讀檔，再回答：</p>
+<p><figure><img loading="lazy" alt="Claude 讀了兩個檔案後回答" src="images/41-answer.png"><figcaption>Claude 讀了兩個檔案後回答</figcaption></figure></p>
+<p>看到 <code>Read 2 files</code> 代表它讀了兩個檔案。想看細節就按 <kbd>Ctrl+O</kbd>：</p>
+<p><figure><img loading="lazy" alt="詳細過程（Ctrl+O）" src="images/42-transcript.png"><figcaption>詳細過程（Ctrl+O）</figcaption></figure></p>
+<blockquote>
+<p>💡 <strong>新手技巧</strong>：在要它改東西之前，先讓它「讀、解釋」。它理解得越正確，後面改得越好。</p>
+</blockquote>
+<h2>4.3 第二步：請它修改程式</h2>
+<p><figure><img loading="lazy" alt="Claude 提出修改並等你核准" src="images/43-edit-permission.png"><figcaption>Claude 提出修改並等你核准</figcaption></figure></p>
+<p>這是最重要的一個畫面，請仔細看：</p>
+<ol>
+<li><code>● Update(src/todos.js)</code>：Claude 要修改哪個檔案。</li>
+<li>中間的差異：<strong>紅色 <code>-</code></strong> 是要刪掉的行、<strong>綠色 <code>+</code></strong> 是要加上的行。</li>
+<li>底部選項：
+   - <strong>1. Yes</strong>：同意這次修改。
+   - <strong>2. Yes, and switch to accept edits</strong>：之後這個 session 的修改都不再問。
+   - <strong>3. No</strong>：拒絕。拒絕後可以直接告訴它你要怎麼改。
+   - <kbd>Tab</kbd>（Tab to amend）：同意的同時附上一段補充說明。</li>
+</ol>
+<p>選 Yes 後，Claude 完成修改並說明：</p>
+<p><figure><img loading="lazy" alt="修改完成" src="images/44-edit-done.png"><figcaption>修改完成</figcaption></figure></p>
+<h2>4.4 第三步：讓它跑指令</h2>
+<p><figure><img loading="lazy" alt="執行 npm test 前詢問" src="images/45-bash-permission.png"><figcaption>執行 npm test 前詢問</figcaption></figure></p>
+<p>執行指令前同樣會詢問。選項 <strong>2. Yes, and don't ask again for: npm test *</strong> 會記住這條規則（寫進 <code>.claude/settings.local.json</code>），以後跑測試不再問。</p>
+<h2>4.5 第四步：檢查改了什麼</h2>
+<p>輸入 <code>/diff</code> 看所有改動（含 Claude 改的）：</p>
+<p><figure><img loading="lazy" alt="/diff 側邊面板" src="images/48-diff.png"><figcaption>/diff 側邊面板</figcaption></figure></p>
+<h2>4.6 改壞了？回到過去</h2>
+<p>在<strong>空白</strong>輸入框按兩下 <kbd>Esc</kbd>，或輸入 <code>/rewind</code>：</p>
+<p><figure><img loading="lazy" alt="Rewind 選單" src="images/46-rewind.png"><figcaption>Rewind 選單</figcaption></figure></p>
+<p>每則訊息旁顯示該點之後的程式改動（例如 <code>todos.js +3 -1</code>）。選一則按 Enter：</p>
+<p><figure><img loading="lazy" alt="還原選項" src="images/47-rewind-options.png"><figcaption>還原選項</figcaption></figure></p>
+<table>
+<thead>
+<tr>
+<th>選項</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Restore code and conversation</td>
+<td>程式碼與對話都回到那一刻</td>
+</tr>
+<tr>
+<td>Restore conversation</td>
+<td>只回溯對話，程式碼保留</td>
+</tr>
+<tr>
+<td>Restore code</td>
+<td>只還原程式碼，對話保留</td>
+</tr>
+<tr>
+<td>Summarize from here／up to here</td>
+<td>不刪除，而是把那段之後／之前的對話摘要壓縮</td>
+</tr>
+</tbody>
+</table>
+<h2>4.7 第五步：收尾</h2>
+<ul>
+<li>讓 Claude 幫你 commit：「幫我寫一個清楚的 commit 訊息並 commit」。</li>
+<li>換下一個不相關的任務前輸入 <code>/clear</code> 開新對話（舊的可用 <code>/resume</code> 找回）。</li>
+<li>給 session 取名：<code>/rename todo-驗證功能</code>。</li>
+</ul>
+<h2>4.8 推薦工作節奏</h2>
+<pre><code>① 探索：「先讀相關檔案，解釋一下現在怎麼運作，先不要改」
+② 計畫：Shift+Tab 切到 Plan 模式，或輸入 /plan 加任務描述
+③ 實作：核准計畫後讓它動手
+④ 驗證：跑測試、/code-review、/verify
+⑤ 檢查：/diff 看過再 commit
+</code></pre>
+<h2>4.9 寫出好提示的技巧</h2>
+<table>
+<thead>
+<tr>
+<th>❌ 模糊</th>
+<th>✅ 具體</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>修 bug</td>
+<td>輸入錯誤密碼後畫面變空白，請找出原因並修好，修完跑 <code>npm test</code> 確認</td>
+</tr>
+<tr>
+<td>加測試</td>
+<td>幫 <code>src/todos.js</code> 的 <code>addTodo</code> 寫單元測試，包含空白標題的情況</td>
+</tr>
+<tr>
+<td>改好看一點</td>
+<td>把首頁按鈕改成圓角、主色 #c2562f，手機版寬度 100%</td>
+</tr>
+</tbody>
+</table>
+<p>原則：<strong>說清楚目標、限制、怎麼驗證完成</strong>。大任務拆成條列步驟。可以貼截圖（<kbd>Ctrl+V</kbd>）或用 <code>@檔名</code> 指定檔案。</p></section>
+<section id="ch-05" data-title="第 5 章　介面導覽與快捷鍵"><h1>第 5 章　介面導覽與快捷鍵</h1>
+<h2>5.1 輸入框的四個「魔法開頭」</h2>
+<table>
+<thead>
+<tr>
+<th>開頭</th>
+<th>作用</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/</code></td>
+<td>指令或 skill 選單</td>
+<td><code>/help</code>、<code>/model</code>、<code>/clear</code></td>
+</tr>
+<tr>
+<td><code>!</code></td>
+<td>直接執行終端機指令，輸出會加入對話</td>
+<td><code>! git status</code></td>
+</tr>
+<tr>
+<td><code>@</code></td>
+<td>指定檔案或資料夾（自動完成）</td>
+<td><code>看一下 @src/todos.js</code></td>
+</tr>
+<tr>
+<td><code>?</code>（空白時）</td>
+<td>顯示快捷鍵說明</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>輸入 <code>/</code> 的指令選單</strong>（繼續打字可篩選）：</p>
+<p><figure><img loading="lazy" alt="斜線指令選單" src="images/05-slash.png"><figcaption>斜線指令選單</figcaption></figure></p>
+<p><strong><code>!</code> 進入 shell 模式</strong>，輸入框左側變成 <code>!</code>、底部顯示 <code>! for shell mode</code>：</p>
+<p><figure><img loading="lazy" alt="shell 模式" src="images/49-bashmode.png"><figcaption>shell 模式</figcaption></figure></p>
+<p><strong><code>@</code> 提及檔案</strong>，會跳出路徑建議，按 <kbd>Tab</kbd> 接受：</p>
+<p><figure><img loading="lazy" alt="@ 檔案提及" src="images/50-mention.png"><figcaption>@ 檔案提及</figcaption></figure></p>
+<p><strong><code>?</code> 顯示快捷鍵</strong>：</p>
+<p><figure><img loading="lazy" alt="快捷鍵說明" src="images/04-shortcuts.png"><figcaption>快捷鍵說明</figcaption></figure></p>
+<h2>5.2 權限模式指示（畫面最下方）</h2>
+<p>按 <kbd>Shift+Tab</kbd> 循環切換，最下方會即時顯示目前模式：</p>
+<p><strong>Manual（手動）</strong>——除了讀取都會問你：</p>
+<p><figure><img loading="lazy" alt="Manual 模式" src="images/06-mode-manual.png"><figcaption>Manual 模式</figcaption></figure></p>
+<p><strong>Accept edits（自動接受編輯）</strong>——改檔不問：</p>
+<p><figure><img loading="lazy" alt="Accept edits 模式" src="images/06-mode-acceptedits.png"><figcaption>Accept edits 模式</figcaption></figure></p>
+<p><strong>Plan（規劃）</strong>——只研究、先出計畫：</p>
+<p><figure><img loading="lazy" alt="Plan 模式" src="images/06-mode-plan.png"><figcaption>Plan 模式</figcaption></figure></p>
+<p><strong>Auto（自動）</strong>——分類器把關，目前的預設：</p>
+<p><figure><img loading="lazy" alt="Auto 模式" src="images/06-mode-auto.png"><figcaption>Auto 模式</figcaption></figure></p>
+<h2>5.3 最常用的快捷鍵</h2>
+<table>
+<thead>
+<tr>
+<th>按鍵</th>
+<th>功能</th>
+<th>新手何時用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><kbd>Enter</kbd></td>
+<td>送出</td>
+<td>每次</td>
+</tr>
+<tr>
+<td><kbd>\</kbd> + <kbd>Enter</kbd></td>
+<td>換行（不送出）</td>
+<td>打多行訊息；執行 <code>/terminal-setup</code> 後可用 <kbd>Shift+Enter</kbd></td>
+</tr>
+<tr>
+<td><kbd>Esc</kbd></td>
+<td>中斷 Claude 目前的動作</td>
+<td>發現方向不對時，立刻停</td>
+</tr>
+<tr>
+<td><kbd>Esc</kbd> <kbd>Esc</kbd></td>
+<td>有字時清空輸入；空白時開 Rewind</td>
+<td>改壞了想回去</td>
+</tr>
+<tr>
+<td><kbd>Shift+Tab</kbd></td>
+<td>切換權限模式</td>
+<td>想先規劃或加快速度</td>
+</tr>
+<tr>
+<td><kbd>↑</kbd> / <kbd>↓</kbd></td>
+<td>叫出之前輸入過的訊息</td>
+<td>重送或修改上一句</td>
+</tr>
+<tr>
+<td><kbd>Ctrl+C</kbd></td>
+<td>中斷；空白時按兩次離開</td>
+<td>結束 Claude Code</td>
+</tr>
+<tr>
+<td><kbd>Ctrl+D</kbd> ×2</td>
+<td>離開</td>
+<td>結束</td>
+</tr>
+<tr>
+<td><kbd>Ctrl+O</kbd></td>
+<td>顯示詳細過程（transcript）</td>
+<td>想知道它讀了什麼、跑了什麼</td>
+</tr>
+<tr>
+<td><kbd>Ctrl+T</kbd></td>
+<td>顯示／隱藏 Claude 的待辦清單</td>
+<td>長任務追進度</td>
+</tr>
+<tr>
+<td><kbd>Ctrl+B</kbd></td>
+<td>把正在跑的指令或子代理丟到背景</td>
+<td>跑很久的伺服器、測試</td>
+</tr>
+<tr>
+<td><kbd>Ctrl+G</kbd></td>
+<td>用外部編輯器寫長訊息</td>
+<td>要貼很長的需求</td>
+</tr>
+<tr>
+<td><kbd>Ctrl+R</kbd></td>
+<td>搜尋輸入歷史</td>
+<td>找以前下過的指令</td>
+</tr>
+<tr>
+<td><kbd>Ctrl+S</kbd></td>
+<td>暫存目前草稿，再按一次還原</td>
+<td>臨時插問一個問題</td>
+</tr>
+<tr>
+<td><kbd>Ctrl+V</kbd>（Windows 也可 <kbd>Alt+V</kbd>）</td>
+<td>貼上圖片</td>
+<td>貼錯誤截圖、設計稿</td>
+</tr>
+<tr>
+<td><kbd>Ctrl+L</kbd></td>
+<td>重繪畫面</td>
+<td>畫面亂掉</td>
+</tr>
+<tr>
+<td><kbd>Alt+P</kbd>（Mac：<kbd>Option+P</kbd>）</td>
+<td>切換模型</td>
+<td>—</td>
+</tr>
+<tr>
+<td><kbd>Alt+O</kbd>（Mac：<kbd>Option+O</kbd>）</td>
+<td>切換 Fast mode</td>
+<td>—</td>
+</tr>
+<tr>
+<td><kbd>←</kbd>（空白時）</td>
+<td>把 session 放到背景並打開 Agent view</td>
+<td>想同時開好幾個任務</td>
+</tr>
+<tr>
+<td><kbd>Ctrl+Z</kbd></td>
+<td>暫停（macOS/Linux，用 <code>fg</code> 回來）</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>macOS 使用者：要用 <kbd>Option</kbd> 系列快捷鍵，請在終端機設定中開啟「Option 當作 Meta 鍵」。</p>
+</blockquote>
+<h2>5.4 好用的互動功能</h2>
+<ul>
+<li><strong>訊息排隊</strong>：Claude 工作中你可以繼續打字送出，訊息會排隊；按 <kbd>Ctrl+Enter</kbd> 立刻插隊送出。</li>
+<li><strong><code>/btw 問題</code></strong>：問一個不會進入對話歷史的旁支問題，例如「/btw 這個 API 的英文全名是什麼？」。</li>
+<li><strong><code>/help</code></strong>：說明頁，有 General、Commands、Custom commands 分頁：</li>
+</ul>
+<p><figure><img loading="lazy" alt="/help 說明" src="images/31-help.png"><figcaption>/help 說明</figcaption></figure></p>
+<ul>
+<li><strong>Session recap</strong>：離開 5 分鐘以上回來，會顯示期間發生了什麼；也可 <code>/recap</code> 手動產生。</li>
+<li><strong>全螢幕模式</strong>：<code>/tui fullscreen</code> 啟用不閃爍介面；在其中 <code>/focus</code> 只顯示重點。</li>
+<li><strong>Vim 模式</strong>：<code>/config</code> → Editor mode 改成 vim。</li>
+<li><strong>語音輸入</strong>：<code>/voice</code>（需 claude.ai 帳號）。</li>
+</ul>
+<h2>5.5 Agent view：同時管理多個 Claude</h2>
+<p>在空白輸入框按 <kbd>←</kbd>，目前對話會移到背景，並打開 Agent view：</p>
+<p><figure><img loading="lazy" alt="Agent view" src="images/51-agentview.png"><figcaption>Agent view</figcaption></figure></p>
+<ul>
+<li><strong>Needs input</strong>：等你回答的 session</li>
+<li><strong>Working</strong>：正在工作中（關掉終端機也會繼續跑）</li>
+<li><strong>Completed</strong>：完成待你檢查</li>
+<li>最下面輸入框直接描述新任務，就會開一個新的背景 session；<kbd>Enter</kbd> 進入某個 session、<kbd>Space</kbd> 快速預覽並回覆。</li>
+</ul>
+<p>詳見第 13 章。</p>
+<h2>5.6 背景工作與 <code>/tasks</code></h2>
+<p><code>/tasks</code> 列出本 session 在背景跑的指令與子代理：</p>
+<p><figure><img loading="lazy" alt="/tasks 背景工作" src="images/34-tasks.png"><figcaption>/tasks 背景工作</figcaption></figure></p></section>
+<section id="ch-06" data-title="第 6 章　斜線指令大全"><h1>第 6 章　斜線指令大全</h1>
+<blockquote>
+<p>在輸入框打 <code>/</code> 就會跳出指令選單，繼續打字可以篩選。下面依「什麼時候用」分類。標示 🧩 的是內建 skill（交給 Claude 執行的提示），🔀 是內建工作流程。可用的指令會依方案、平台略有不同。</p>
+</blockquote>
+<p><figure><img loading="lazy" alt="斜線指令選單" src="images/05-slash.png"><figcaption>斜線指令選單</figcaption></figure></p>
+<h2>6.1 新手最常用的 12 個</h2>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>做什麼</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/help</code></td>
+<td>說明與快捷鍵</td>
+<td><code>/help</code></td>
+</tr>
+<tr>
+<td><code>/init</code></td>
+<td>自動產生 CLAUDE.md</td>
+<td><code>/init</code></td>
+</tr>
+<tr>
+<td><code>/clear</code></td>
+<td>開新對話（舊的可找回）</td>
+<td><code>/clear</code></td>
+</tr>
+<tr>
+<td><code>/resume</code></td>
+<td>回到以前的對話</td>
+<td><code>/resume</code></td>
+</tr>
+<tr>
+<td><code>/model</code></td>
+<td>換模型</td>
+<td><code>/model sonnet</code></td>
+</tr>
+<tr>
+<td><code>/config</code></td>
+<td>設定面板</td>
+<td><code>/config</code></td>
+</tr>
+<tr>
+<td><code>/plan</code></td>
+<td>進入規劃模式</td>
+<td><code>/plan 幫登入加上兩步驟驗證</code></td>
+</tr>
+<tr>
+<td><code>/diff</code></td>
+<td>看改了什麼</td>
+<td><code>/diff</code></td>
+</tr>
+<tr>
+<td><code>/rewind</code></td>
+<td>回到之前的狀態</td>
+<td><code>/rewind</code></td>
+</tr>
+<tr>
+<td><code>/compact</code></td>
+<td>壓縮對話騰出空間</td>
+<td><code>/compact 保留 API 設計的決定</code></td>
+</tr>
+<tr>
+<td><code>/usage</code></td>
+<td>看花費與額度</td>
+<td><code>/usage</code></td>
+</tr>
+<tr>
+<td><code>/doctor</code> 🧩</td>
+<td>健檢並修正設定問題</td>
+<td><code>/doctor</code></td>
+</tr>
+</tbody>
+</table>
+<h2>6.2 專案設定與健檢</h2>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/init</code></td>
+<td>分析專案、產生 CLAUDE.md。設環境變數 <code>CLAUDE_CODE_NEW_INIT=1</code> 會用互動流程連 skills、hooks 一起設定</td>
+</tr>
+<tr>
+<td><code>/memory</code></td>
+<td>編輯 CLAUDE.md、開關自動記憶</td>
+</tr>
+<tr>
+<td><code>/config [key=value]</code>（別名 <code>/settings</code>）</td>
+<td>設定面板；也能 <code>/config theme=dark</code> 直接改</td>
+</tr>
+<tr>
+<td><code>/update-config 描述</code> 🧩</td>
+<td>用一句話請 Claude 改 settings.json，例：<code>/update-config 允許 npm test 不用問</code></td>
+</tr>
+<tr>
+<td><code>/permissions</code></td>
+<td>管理允許／詢問／禁止規則</td>
+</tr>
+<tr>
+<td><code>/fewer-permission-prompts</code> 🧩</td>
+<td>分析你的使用紀錄，自動把常用唯讀指令加入白名單</td>
+</tr>
+<tr>
+<td><code>/auto-mode-setup</code></td>
+<td>讓 Auto mode 認識你的環境（哪些是測試機、哪些分支能推）</td>
+</tr>
+<tr>
+<td><code>/doctor</code>（別名 <code>/checkup</code>）🧩</td>
+<td>全面健檢；<code>/doctor prompt-audit</code> 檢查你的指示檔寫得好不好</td>
+</tr>
+<tr>
+<td><code>/status</code></td>
+<td>版本、模型、帳號、載入的設定檔</td>
+</tr>
+<tr>
+<td><code>/hooks</code>、<code>/mcp</code>、<code>/plugin</code>、<code>/skills</code>、<code>/agents</code></td>
+<td>檢視／管理各類擴充</td>
+</tr>
+<tr>
+<td><code>/skill-doctor</code></td>
+<td>看每個 skill 吃多少 context、多常被用</td>
+</tr>
+<tr>
+<td><code>/reload-skills</code>、<code>/reload-plugins</code></td>
+<td>不重開就重新載入</td>
+</tr>
+<tr>
+<td><code>/terminal-setup</code></td>
+<td>安裝 Shift+Enter 換行等終端機設定</td>
+</tr>
+<tr>
+<td><code>/statusline 描述</code></td>
+<td>自訂狀態列，例：<code>/statusline 顯示模型與 git 分支</code></td>
+</tr>
+<tr>
+<td><code>/theme</code>、<code>/output-style</code>、<code>/color</code>、<code>/tui</code>、<code>/keybindings</code></td>
+<td>外觀與按鍵</td>
+</tr>
+<tr>
+<td><code>/import codex|gemini|cursor</code></td>
+<td>從其他 AI 工具匯入設定</td>
+</tr>
+<tr>
+<td><code>/powerup</code></td>
+<td>互動式小課程，學新功能</td>
+</tr>
+</tbody>
+</table>
+<h2>6.3 工作進行中</h2>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/plan [描述]</code></td>
+<td>進入規劃模式</td>
+</tr>
+<tr>
+<td><code>/model [模型]</code></td>
+<td>換模型（<kbd>s</kbd> 只用於本次）</td>
+</tr>
+<tr>
+<td><code>/effort [low…max｜auto｜ultracode]</code></td>
+<td>調整推理強度</td>
+</tr>
+<tr>
+<td><code>/fast [on｜off]</code></td>
+<td>開關 Fast mode（更快、較貴）</td>
+</tr>
+<tr>
+<td><code>/advisor [模型｜off]</code></td>
+<td>關鍵時刻諮詢另一個更強的模型</td>
+</tr>
+<tr>
+<td><code>/context</code></td>
+<td>看 context 用量</td>
+</tr>
+<tr>
+<td><code>/compact [重點]</code></td>
+<td>摘要壓縮對話</td>
+</tr>
+<tr>
+<td><code>/autocompact [auto｜500k]</code></td>
+<td>設定何時自動壓縮</td>
+</tr>
+<tr>
+<td><code>/btw 問題</code></td>
+<td>旁支問題，不進入對話歷史</td>
+</tr>
+<tr>
+<td><code>/goal 條件</code></td>
+<td>設定目標，Claude 會持續工作直到達成，例：<code>/goal 所有測試通過</code></td>
+</tr>
+<tr>
+<td><code>/loop [間隔] [提示]</code> 🧩</td>
+<td>定時重複執行，例：<code>/loop 5m 檢查部署是否完成</code></td>
+</tr>
+<tr>
+<td><code>/add-dir 路徑</code></td>
+<td>加入額外可存取的資料夾</td>
+</tr>
+<tr>
+<td><code>/cd 路徑</code></td>
+<td>把 session 移到另一個資料夾（保留對話）</td>
+</tr>
+<tr>
+<td><code>/tasks</code></td>
+<td>看背景指令與子代理</td>
+</tr>
+<tr>
+<td><code>/subtask 任務</code></td>
+<td>派一個繼承完整對話的子代理在背景做，結果回到這裡</td>
+</tr>
+<tr>
+<td><code>/batch 指示</code> 🧩</td>
+<td>大改動拆成 5–30 份平行處理，例：<code>/batch 把 src/ 從 JS 轉成 TS</code></td>
+</tr>
+<tr>
+<td><code>/deep-research 問題</code> 🔀</td>
+<td>多來源網路研究並交叉驗證</td>
+</tr>
+<tr>
+<td><code>/workflows</code></td>
+<td>查看／暫停／存檔動態工作流程</td>
+</tr>
+<tr>
+<td><code>/chrome</code>、<code>/claude-in-chrome 任務</code> 🧩</td>
+<td>讓 Claude 操作你的 Chrome 測網頁</td>
+</tr>
+<tr>
+<td><code>/run</code>、<code>/verify</code> 🧩</td>
+<td>實際啟動 app 驗證改動</td>
+</tr>
+<tr>
+<td><code>/debug [描述]</code> 🧩</td>
+<td>開除錯日誌並分析</td>
+</tr>
+<tr>
+<td><code>/claude-api</code> 🧩</td>
+<td>開發 Claude API 應用的輔助</td>
+</tr>
+<tr>
+<td><code>/design</code>、<code>/slides</code>、<code>/dataviz</code> 🧩</td>
+<td>設計畫板、簡報、圖表設計</td>
+</tr>
+</tbody>
+</table>
+<h2>6.4 收尾與交付</h2>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/diff</code></td>
+<td>檢視所有改動</td>
+</tr>
+<tr>
+<td><code>/code-review [等級] [--fix] [--comment] [PR編號]</code>（別名 <code>/review</code>）🧩</td>
+<td>找 bug；<code>--fix</code> 直接修；<code>--comment</code> 貼到 PR；<code>ultra</code> 走雲端深度審查</td>
+</tr>
+<tr>
+<td><code>/ultrareview</code></td>
+<td>雲端多代理深度審查</td>
+</tr>
+<tr>
+<td><code>/security-review</code></td>
+<td>資安審查</td>
+</tr>
+<tr>
+<td><code>/simplify</code> 🧩</td>
+<td>找可簡化、可重用的地方並修改</td>
+</tr>
+<tr>
+<td><code>/autofix-pr</code></td>
+<td>開雲端 session 盯著 PR，CI 失敗就自動修</td>
+</tr>
+<tr>
+<td><code>/install-github-app</code>、<code>/install-slack-app</code></td>
+<td>安裝 GitHub／Slack 整合</td>
+</tr>
+<tr>
+<td><code>/copy [N]</code></td>
+<td>複製回應或其中的程式碼區塊</td>
+</tr>
+<tr>
+<td><code>/export [檔名]</code></td>
+<td>匯出對話成文字檔</td>
+</tr>
+<tr>
+<td><code>/artifacts</code></td>
+<td>列出你的 artifacts</td>
+</tr>
+</tbody>
+</table>
+<h2>6.5 Session 管理</h2>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/clear [名稱]</code>（別名 <code>/new</code>、<code>/reset</code>）</td>
+<td>開新對話</td>
+</tr>
+<tr>
+<td><code>/resume [名稱或 ID]</code></td>
+<td>回到舊對話</td>
+</tr>
+<tr>
+<td><code>/rename [名稱]</code></td>
+<td>命名 session</td>
+</tr>
+<tr>
+<td><code>/branch</code></td>
+<td>從這點分岔並切換過去（原對話保留）</td>
+</tr>
+<tr>
+<td><code>/fork [提示]</code></td>
+<td>複製成新的背景 session，你繼續在這裡</td>
+</tr>
+<tr>
+<td><code>/background</code>（<code>/bg</code>）</td>
+<td>把整個 session 丟到背景</td>
+</tr>
+<tr>
+<td><code>/rewind</code>（<code>/undo</code>、<code>/checkpoint</code>）</td>
+<td>回溯</td>
+</tr>
+<tr>
+<td><code>/recap</code></td>
+<td>一行摘要這個 session</td>
+</tr>
+<tr>
+<td><code>/exit</code>（<code>/quit</code>）</td>
+<td>離開</td>
+</tr>
+<tr>
+<td><code>/teleport</code>、<code>/remote-control</code>（<code>/rc</code>）、<code>/desktop</code></td>
+<td>雲端 session 拉回本機、讓手機遙控、轉到桌面版</td>
+</tr>
+<tr>
+<td><code>/schedule</code>（<code>/routines</code>）</td>
+<td>建立雲端排程任務</td>
+</tr>
+<tr>
+<td><code>/list-agents</code>（<code>/peers</code>）</td>
+<td>列出可傳訊息的其他 session</td>
+</tr>
+</tbody>
+</table>
+<h2>6.6 帳號與其他</h2>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/usage</code>（<code>/cost</code>、<code>/stats</code>）</td>
+<td>花費、額度、各功能用量</td>
+</tr>
+<tr>
+<td><code>/insights</code></td>
+<td>產生你的使用習慣分析報告</td>
+</tr>
+<tr>
+<td><code>/rate-limit-options</code>、<code>/usage-credits</code>、<code>/upgrade</code></td>
+<td>額度用完時的選項</td>
+</tr>
+<tr>
+<td><code>/login</code>、<code>/logout</code></td>
+<td>切換帳號</td>
+</tr>
+<tr>
+<td><code>/team-onboarding</code></td>
+<td>依你的使用紀錄產生給隊友的上手指南</td>
+</tr>
+<tr>
+<td><code>/release-notes</code></td>
+<td>看版本更新內容</td>
+</tr>
+<tr>
+<td><code>/bug</code>、<code>/feedback</code></td>
+<td>回報問題</td>
+</tr>
+<tr>
+<td><code>/mobile</code></td>
+<td>手機 App 下載 QR code</td>
+</tr>
+<tr>
+<td><code>/voice</code></td>
+<td>語音輸入</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ 已移除的舊指令：<code>/vim</code>（改用 <code>/config</code> → Editor mode）、<code>/pr-comments</code>（直接請 Claude 看 PR 留言）、<code>/ultraplan</code>（改用 plan 模式）。</p>
+</blockquote>
+<h2>6.7 自己做指令</h2>
+<p>任何 skill 都會變成 <code>/名稱</code> 指令。在 <code>.claude/skills/發版/SKILL.md</code> 寫好流程，就能輸入 <code>/發版</code> 使用。詳見第 12 章。</p></section>
+<section id="ch-07" data-title="第 7 章　`/config` 設定面板：每個選項逐一說明"><h1>第 7 章　<code>/config</code> 設定面板：每個選項逐一說明</h1>
+<blockquote>
+<p>在 Claude Code 中輸入 <code>/config</code>（或 <code>/settings</code>）就會打開設定面板。這章把面板上<strong>每一個選項</strong>都說明清楚，並告訴你對應的 <code>settings.json</code> 寫法。</p>
+</blockquote>
+<h2>7.1 面板長什麼樣子</h2>
+<p><figure><img loading="lazy" alt="/config 設定面板" src="images/10-config.png"><figcaption>/config 設定面板</figcaption></figure></p>
+<p>最上方有五個分頁：</p>
+<table>
+<thead>
+<tr>
+<th>分頁</th>
+<th>內容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Settings</strong></td>
+<td>標題（目前所在的設定面板）</td>
+</tr>
+<tr>
+<td><strong>Status</strong></td>
+<td>版本、session、模型、帳號、已載入的設定來源</td>
+</tr>
+<tr>
+<td><strong>Config</strong></td>
+<td>所有可調整的選項（本章重點）</td>
+</tr>
+<tr>
+<td><strong>Usage</strong></td>
+<td>本次 session 成本、方案額度</td>
+</tr>
+<tr>
+<td><strong>Stats</strong></td>
+<td>使用統計</td>
+</tr>
+</tbody>
+</table>
+<p><strong>操作方式</strong>：</p>
+<ul>
+<li>一打開游標在搜尋框，直接打字就能篩選選項（例如輸入 <code>theme</code>）。</li>
+<li><kbd>↓</kbd> 進入清單，<kbd>Enter</kbd> 或 <kbd>Space</kbd> 切換 true/false 或打開子選單（有 <code>›</code> 的項目）。</li>
+<li><kbd>↑</kbd> 回到分頁列，<kbd>←</kbd>/<kbd>→</kbd> 切換分頁，<kbd>Esc</kbd> 關閉。</li>
+<li>也可以不開面板，直接輸入 <code>/config 選項=值</code>，例如 <code>/config verbose=true</code>。<code>/config --help</code> 列出可用的選項名稱。</li>
+</ul>
+<p>搜尋篩選的樣子：</p>
+<p><figure><img loading="lazy" alt="在 /config 中搜尋" src="images/13-config-search.png"><figcaption>在 /config 中搜尋</figcaption></figure></p>
+<p><strong>完整清單（v2.1.312）</strong>：</p>
+<p><figure><img loading="lazy" alt="/config 完整選項清單" src="images/10-config-full.png"><figcaption>/config 完整選項清單</figcaption></figure></p>
+<blockquote>
+<p>你在面板上的變更大多存到 <code>~/.claude/settings.json</code>（對所有專案生效）；少數（例如 Show tips）存到專案的 <code>.claude/settings.local.json</code>；少數全域選項存到 <code>~/.claude.json</code>。</p>
+</blockquote>
+<h2>7.2 Status 與 Usage 分頁</h2>
+<p><figure><img loading="lazy" alt="Status 分頁" src="images/11-status.png"><figcaption>Status 分頁</figcaption></figure></p>
+<table>
+<thead>
+<tr>
+<th>欄位</th>
+<th>意思</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Version</td>
+<td>Claude Code 版本</td>
+</tr>
+<tr>
+<td>Session name / ID</td>
+<td>本 session 的名稱（<code>/rename</code> 設定）與唯一識別碼</td>
+</tr>
+<tr>
+<td>Session kind</td>
+<td>interactive（互動）或背景 session</td>
+</tr>
+<tr>
+<td>cwd</td>
+<td>目前工作資料夾</td>
+</tr>
+<tr>
+<td>Auth token / API key</td>
+<td>用哪種方式登入</td>
+</tr>
+<tr>
+<td>Model</td>
+<td>目前模型</td>
+</tr>
+<tr>
+<td>Setting sources</td>
+<td>實際載入了哪些設定檔（設定沒生效時先看這裡）</td>
+</tr>
+</tbody>
+</table>
+<p><figure><img loading="lazy" alt="Usage 分頁" src="images/12-usage.png"><figcaption>Usage 分頁</figcaption></figure></p>
+<p>Usage 顯示：總花費、API 時間、實際經過時間、程式碼增刪行數、token 用量（輸入、輸出、快取讀寫）。</p>
+<h2>7.3 Config 分頁：逐項說明</h2>
+<p>下表依面板上的順序排列。「設定檔寫法」可以直接貼進 <code>~/.claude/settings.json</code> 的大括號裡。</p>
+<h3>對話與 context</h3>
+<table>
+<thead>
+<tr>
+<th>面板選項</th>
+<th>預設</th>
+<th>說明與何時調整</th>
+<th>設定檔寫法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Auto-compact</strong></td>
+<td>true</td>
+<td>context 快滿時自動把舊對話摘要壓縮。<strong>建議保持開啟</strong>，關掉後 context 滿了會直接出錯。</td>
+<td><code>"autoCompactEnabled": true</code></td>
+</tr>
+<tr>
+<td><strong>Idle compaction</strong></td>
+<td>true</td>
+<td>超過 20 萬 token 的長對話閒置約 54 分鐘時，先壓縮再讓快取過期，回來時比較省額度。不希望它自動摘要就關掉。</td>
+<td><code>"idleCompaction": false</code></td>
+</tr>
+<tr>
+<td><strong>Continue automatically at usage limit</strong></td>
+<td>true</td>
+<td>訂閱額度用完時，等額度重置後自動繼續剛才的任務。關掉則跳出選單讓你選。</td>
+<td><code>"autoContinueAtUsageLimit": true</code></td>
+</tr>
+<tr>
+<td><strong>Switch models when a message is flagged</strong></td>
+<td>Switch automatically</td>
+<td>訊息被安全機制標記時：自動換模型繼續，或「Ask each time」每次問你。</td>
+<td><code>"switchModelsOnFlag": false</code>（= 每次問）</td>
+</tr>
+<tr>
+<td><strong>Thinking mode</strong></td>
+<td>true</td>
+<td>延伸思考。Opus 5.5 等新模型無法關閉（畫面會顯示「Thinking can't be turned off」）。</td>
+<td><code>"alwaysThinkingEnabled": true</code></td>
+</tr>
+<tr>
+<td><strong>Prompt suggestions</strong></td>
+<td>true</td>
+<td>回合結束後在輸入框顯示灰色的「你可能想說的下一句」，按 <kbd>Tab</kbd> 採用。</td>
+<td><code>"promptSuggestionEnabled": false</code></td>
+</tr>
+<tr>
+<td><strong>Session recap</strong></td>
+<td>true</td>
+<td>離開 5 分鐘以上回來時，顯示期間發生的事。</td>
+<td><code>"awaySummaryEnabled": false</code></td>
+</tr>
+<tr>
+<td><strong>Rewind code (checkpoints)</strong></td>
+<td>true</td>
+<td>改檔前存快照，讓 <code>/rewind</code> 能還原程式碼。<strong>建議保持開啟</strong>。</td>
+<td><code>"fileCheckpointingEnabled": true</code></td>
+</tr>
+</tbody>
+</table>
+<p><figure><img loading="lazy" alt="Switch models 子選單" src="images/19-switchmodels.png"><figcaption>Switch models 子選單</figcaption></figure></p>
+<h3>多代理工作流程</h3>
+<table>
+<thead>
+<tr>
+<th>面板選項</th>
+<th>預設</th>
+<th>說明</th>
+<th>設定檔寫法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Dynamic workflows</strong></td>
+<td>true（Pro 需手動開）</td>
+<td>允許 Claude 寫腳本一次指揮多個子代理處理大任務（第 13 章）。</td>
+<td><code>"enableWorkflows": true</code></td>
+</tr>
+<tr>
+<td><strong>Ultracode keyword trigger</strong></td>
+<td>true</td>
+<td>提示中出現 <code>ultracode</code> 就啟動工作流程。常誤觸就關掉。</td>
+<td><code>"workflowKeywordTriggerEnabled": false</code></td>
+</tr>
+<tr>
+<td><strong>Dynamic workflow size</strong></td>
+<td>medium</td>
+<td>工作流程的代理數量建議：small（&lt;5）、medium（&lt;10）、large（&lt;50）、unrestricted。越大越耗額度。</td>
+<td><code>"workflowSizeGuideline": "small"</code></td>
+</tr>
+<tr>
+<td><strong>Artifacts</strong></td>
+<td>true</td>
+<td>允許 Claude 把成果發布成可分享的網頁（artifact）。</td>
+<td><code>"enableArtifact": false</code></td>
+</tr>
+</tbody>
+</table>
+<h3>顯示</h3>
+<table>
+<thead>
+<tr>
+<th>面板選項</th>
+<th>預設</th>
+<th>說明</th>
+<th>設定檔寫法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Show tips</strong></td>
+<td>true</td>
+<td>工作中 spinner 下方的小提示。</td>
+<td><code>"spinnerTipsEnabled": false</code></td>
+</tr>
+<tr>
+<td><strong>Reduce motion</strong></td>
+<td>false</td>
+<td>減少動畫（對眼睛敏感或用螢幕閱讀器時）。</td>
+<td><code>"prefersReducedMotion": true</code></td>
+</tr>
+<tr>
+<td><strong>Verbose output</strong></td>
+<td>false</td>
+<td>永遠顯示完整工具輸出（等於一直開著 <kbd>Ctrl+O</kbd>）。</td>
+<td><code>"verbose": true</code></td>
+</tr>
+<tr>
+<td><strong>Terminal progress bar</strong></td>
+<td>true</td>
+<td>在支援的終端機分頁上顯示進度。</td>
+<td><code>"terminalProgressBarEnabled": false</code></td>
+</tr>
+<tr>
+<td><strong>Show turn duration</strong></td>
+<td>true</td>
+<td>回合結束顯示「Cooked for 12s」。</td>
+<td><code>"showTurnDuration": false</code></td>
+</tr>
+<tr>
+<td><strong>Time format</strong></td>
+<td>auto</td>
+<td>時間格式：auto、12-hour、24-hour、24-hour-utc。</td>
+<td><code>"timeFormat": "24-hour"</code></td>
+</tr>
+<tr>
+<td><strong>Theme</strong></td>
+<td>Dark mode</td>
+<td>配色主題（見下圖）。</td>
+<td><code>"theme": "light"</code></td>
+</tr>
+<tr>
+<td><strong>Output style</strong></td>
+<td>default</td>
+<td>回覆風格（見下圖與第 12 章）。</td>
+<td><code>"outputStyle": "Concise"</code></td>
+</tr>
+<tr>
+<td><strong>Language</strong></td>
+<td>English</td>
+<td>Claude 回覆與語音的語言。<strong>想要中文回覆就設這個</strong>。</td>
+<td><code>"language": "繁體中文"</code></td>
+</tr>
+<tr>
+<td><strong>Show PR status footer</strong></td>
+<td>true</td>
+<td>底部顯示目前分支 PR 的審查狀態。</td>
+<td><code>"prStatusFooterEnabled": false</code></td>
+</tr>
+</tbody>
+</table>
+<p><figure><img loading="lazy" alt="Time format 子選單" src="images/18-timeformat.png"><figcaption>Time format 子選單</figcaption></figure></p>
+<p><strong>Theme</strong>：包含自動跟隨終端機、深色、淺色、色盲友善、只用 ANSI 顏色等版本，下方即時預覽 diff 顏色；<kbd>Ctrl+T</kbd> 可關閉語法上色。</p>
+<p><figure><img loading="lazy" alt="Theme 子選單" src="images/14-theme.png"><figcaption>Theme 子選單</figcaption></figure></p>
+<p><strong>Output style</strong>：</p>
+<p><figure><img loading="lazy" alt="Output style 子選單" src="images/15-outputstyle.png"><figcaption>Output style 子選單</figcaption></figure></p>
+<table>
+<thead>
+<tr>
+<th>風格</th>
+<th>適合</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Default</td>
+<td>一般使用</td>
+</tr>
+<tr>
+<td>Proactive</td>
+<td>想讓 Claude 少問、直接做</td>
+</tr>
+<tr>
+<td>Concise</td>
+<td>嫌回覆太長</td>
+</tr>
+<tr>
+<td>Explanatory</td>
+<td>想邊做邊學、了解為什麼這樣寫</td>
+</tr>
+<tr>
+<td>Learning</td>
+<td>想練功：Claude 會留一小段程式讓你自己寫</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Language</strong>：直接輸入語言名稱，例如「繁體中文」「Japanese」，留空則為英文：</p>
+<p><figure><img loading="lazy" alt="Language 輸入框" src="images/16-language.png"><figcaption>Language 輸入框</figcaption></figure></p>
+<h3>權限與工作方式</h3>
+<table>
+<thead>
+<tr>
+<th>面板選項</th>
+<th>預設</th>
+<th>說明</th>
+<th>設定檔寫法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Default permission mode</strong></td>
+<td>Manual（互動模式實際預設為 Auto）</td>
+<td>新 session 起始權限模式。按 Enter 循環切換。</td>
+<td><code>"permissions": { "defaultMode": "acceptEdits" }</code></td>
+</tr>
+<tr>
+<td><strong>Use auto mode during plan</strong></td>
+<td>true</td>
+<td>Plan 模式中，讓分類器自動核准唯讀類 shell 指令；關掉改為每次問。</td>
+<td><code>"useAutoModeDuringPlan": false</code></td>
+</tr>
+<tr>
+<td><strong>Worktree base ref</strong></td>
+<td>fresh</td>
+<td>新 worktree 從哪裡分出：fresh（遠端預設分支最新版）或 head（你目前的本地 HEAD）。</td>
+<td><code>"worktree": { "baseRef": "head" }</code></td>
+</tr>
+<tr>
+<td><strong>Respect .gitignore in file picker</strong></td>
+<td>true</td>
+<td><code>@</code> 檔案選單是否隱藏 .gitignore 裡的檔案。</td>
+<td><code>"respectGitignore": false</code></td>
+</tr>
+<tr>
+<td><strong>Editor mode</strong></td>
+<td>normal</td>
+<td>輸入框按鍵：normal 或 vim。</td>
+<td><code>"editorMode": "vim"</code></td>
+</tr>
+<tr>
+<td><strong>Question auto-continue timeout</strong></td>
+<td>never</td>
+<td>Claude 問你選擇題時，閒置多久自動以已選答案繼續：60s、5m、10m、never。</td>
+<td><code>"askUserQuestionTimeout": "5m"</code></td>
+</tr>
+<tr>
+<td><strong>Dialog expiry</strong></td>
+<td>default（5 分鐘）</td>
+<td>轉到手機等遠端裝置的確認框，多久沒回就取消。</td>
+<td><code>"dialogExpiry": "10m"</code></td>
+</tr>
+<tr>
+<td><strong>Messages from your other sessions</strong></td>
+<td>default</td>
+<td>其他 session 傳來的訊息：accept（直接收）、hold（暫存待審）、refuse（拒收）。</td>
+<td><code>"crossSessionInbound": "hold"</code></td>
+</tr>
+<tr>
+<td><strong>Model</strong></td>
+<td>Default (recommended)</td>
+<td>預設模型（同 <code>/model</code>）。</td>
+<td><code>"model": "sonnet"</code></td>
+</tr>
+</tbody>
+</table>
+<p><figure><img loading="lazy" alt="Messages from your other sessions 子選單" src="images/21-peers.png"><figcaption>Messages from your other sessions 子選單</figcaption></figure></p>
+<h3>複製、捲動與 Agent view</h3>
+<table>
+<thead>
+<tr>
+<th>面板選項</th>
+<th>預設</th>
+<th>說明</th>
+<th>設定檔寫法（~/.claude.json 或 settings）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Skip the /copy picker</strong></td>
+<td>false</td>
+<td><code>/copy</code> 直接複製整段回覆，不跳出區塊選擇器。</td>
+<td><code>"copyFullResponse": true</code></td>
+</tr>
+<tr>
+<td><strong>Copy on select</strong></td>
+<td>true</td>
+<td>滑鼠選取文字即自動複製（全螢幕模式）。</td>
+<td><code>"copyOnSelect": false</code></td>
+</tr>
+<tr>
+<td><strong>Auto-scroll</strong></td>
+<td>true</td>
+<td>全螢幕模式自動捲到最新輸出。</td>
+<td><code>"autoScrollEnabled": false</code></td>
+</tr>
+<tr>
+<td><strong>Open agents view by default</strong></td>
+<td>false</td>
+<td>只打 <code>claude</code> 時直接開 Agent view。</td>
+<td><code>"defaultToAgentsView": true</code></td>
+</tr>
+<tr>
+<td><strong>← opens agents</strong></td>
+<td>true</td>
+<td>空白輸入按 <kbd>←</kbd> 開 Agent view。常誤觸就關掉。</td>
+<td><code>"leftArrowOpensAgents": false</code></td>
+</tr>
+<tr>
+<td><strong>Show last response in external editor</strong></td>
+<td>false</td>
+<td>按 <kbd>Ctrl+G</kbd> 開編輯器時，附上 Claude 上一則回覆（註解形式）方便引用。</td>
+<td><code>"externalEditorContext": true</code></td>
+</tr>
+</tbody>
+</table>
+<h3>更新、通知與整合</h3>
+<table>
+<thead>
+<tr>
+<th>面板選項</th>
+<th>預設</th>
+<th>說明</th>
+<th>設定檔寫法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Auto-update channel</strong></td>
+<td>latest</td>
+<td>latest（新功能最快）或 stable（約晚一週，跳過有問題的版本）。</td>
+<td><code>"autoUpdatesChannel": "stable"</code></td>
+</tr>
+<tr>
+<td><strong>Local notifications</strong></td>
+<td>Auto</td>
+<td>任務完成或需要你時的通知方式：終端機鈴聲、iTerm2、Kitty、Ghostty 通知或關閉。</td>
+<td><code>"preferredNotifChannel": "terminal_bell"</code></td>
+</tr>
+<tr>
+<td><strong>Auto-connect to IDE (external terminal)</strong></td>
+<td>false</td>
+<td>在外部終端機啟動時，自動連到正在執行的 VS Code／JetBrains。</td>
+<td><code>"autoConnectIde": true</code></td>
+</tr>
+<tr>
+<td><strong>Claude in Chrome enabled by default</strong></td>
+<td>false</td>
+<td>每個 session 都啟用 Chrome 瀏覽器整合。</td>
+<td><code>"claudeInChromeDefaultEnabled": true</code></td>
+</tr>
+<tr>
+<td><strong>Use custom API key</strong></td>
+<td>（有設 API key 時才出現）</td>
+<td>是否使用環境變數中的 <code>ANTHROPIC_API_KEY</code>。</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Project instructions</strong></td>
+<td>claude-md-or-agents-md</td>
+<td>要讀 CLAUDE.md、AGENTS.md 或兩者（第 11 章）。</td>
+<td>見下方</td>
+</tr>
+</tbody>
+</table>
+<p>切到 stable 頻道時，會問你要「允許降版」還是「停在目前版本直到 stable 追上」：</p>
+<p><figure><img loading="lazy" alt="切換更新頻道" src="images/20-updatechannel.png"><figcaption>切換更新頻道</figcaption></figure></p>
+<p><strong>Project instructions</strong>：</p>
+<p><figure><img loading="lazy" alt="Project instructions 子選單" src="images/22-projinstr.png"><figcaption>Project instructions 子選單</figcaption></figure></p>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>讀哪些檔</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>claude-md</td>
+<td>只讀 CLAUDE.md</td>
+</tr>
+<tr>
+<td>claude-md-or-agents-md（預設）</td>
+<td>有 CLAUDE.md 就讀它，沒有才讀 AGENTS.md</td>
+</tr>
+<tr>
+<td>claude-md-and-agents-md</td>
+<td>兩者都讀</td>
+</tr>
+<tr>
+<td>managed-only</td>
+<td>只讀公司統一下發的指示</td>
+</tr>
+</tbody>
+</table>
+<p>設定檔寫法：</p>
+<pre><code class="language-json">{
+  &quot;pluginConfigs&quot;: {
+    &quot;cc-plugin-agents-md@builtin&quot;: { &quot;options&quot;: { &quot;instructionFiles&quot;: &quot;claude-md-and-agents-md&quot; } }
+  }
+}
+</code></pre>
+<h2>7.4 其他設定對話框</h2>
+<h3><code>/model</code>：選模型</h3>
+<p><figure><img loading="lazy" alt="/model" src="images/17-model.png"><figcaption>/model</figcaption></figure></p>
+<ul>
+<li>上下鍵選模型，<kbd>←</kbd>/<kbd>→</kbd> 調 effort。</li>
+<li><kbd>Enter</kbd> 設為預設（之後新 session 也用它）；<kbd>s</kbd> 只用於本次 session。</li>
+<li>每個模型旁直接標示價格（每百萬 token 輸入／輸出）。</li>
+</ul>
+<h3><code>/effort</code>：推理強度</h3>
+<p><figure><img loading="lazy" alt="/effort" src="images/23-effort.png"><figcaption>/effort</figcaption></figure></p>
+<ul>
+<li>左右鍵在 low、medium、high、xhigh、max 之間調整；<kbd>Tab</kbd> 切換 Ultracode。</li>
+<li><kbd>s</kbd> 只用於本次 session。</li>
+</ul>
+<h3><code>/permissions</code>：權限規則</h3>
+<p><figure><img loading="lazy" alt="/permissions" src="images/24-permissions.png"><figcaption>/permissions</figcaption></figure></p>
+<p>分頁：Recently denied（Auto mode 最近擋下的動作，可重試）、Allow、Ask、Deny、Auto mode（分類器規則）、Workspace（工作目錄）。選「Add a new rule…」新增規則（第 9 章）。</p>
+<h3><code>/memory</code>：記憶</h3>
+<p><figure><img loading="lazy" alt="/memory" src="images/26-memory.png"><figcaption>/memory</figcaption></figure></p>
+<p>開關 Auto-memory、編輯個人 <code>~/.claude/CLAUDE.md</code> 或專案 <code>./CLAUDE.md</code>、打開自動記憶資料夾。</p>
+<h3><code>/hooks</code>、<code>/skills</code>、<code>/plugin</code>、<code>/sandbox</code></h3>
+<p><figure><img loading="lazy" alt="/hooks（唯讀檢視）" src="images/27-hooks.png"><figcaption>/hooks（唯讀檢視）</figcaption></figure></p>
+<p><figure><img loading="lazy" alt="/skills" src="images/30-skills.png"><figcaption>/skills</figcaption></figure></p>
+<p><figure><img loading="lazy" alt="/plugin 市集" src="images/29-plugin.png"><figcaption>/plugin 市集</figcaption></figure></p>
+<p><figure><img loading="lazy" alt="/sandbox 相依套件檢查" src="images/35-sandbox.png"><figcaption>/sandbox 相依套件檢查</figcaption></figure></p>
+<p>這些分別在第 12、9 章詳細介紹。</p>
+<h2>7.5 我該先改哪些設定？（新手建議）</h2>
+<table>
+<thead>
+<tr>
+<th>需求</th>
+<th>建議設定</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>想要中文回覆</td>
+<td>Language → <code>繁體中文</code></td>
+</tr>
+<tr>
+<td>想要邊做邊學</td>
+<td>Output style → Explanatory</td>
+</tr>
+<tr>
+<td>嫌 Claude 囉嗦</td>
+<td>Output style → Concise</td>
+</tr>
+<tr>
+<td>怕 Claude 亂改</td>
+<td>Default permission mode → Manual</td>
+</tr>
+<tr>
+<td>想穩定不想踩新版 bug</td>
+<td>Auto-update channel → stable</td>
+</tr>
+<tr>
+<td>眼睛容易累</td>
+<td>Theme → Light／Reduce motion → true</td>
+</tr>
+</tbody>
+</table></section>
+<section id="ch-08" data-title="第 8 章　settings.json：所有設定項目逐一說明"><h1>第 8 章　settings.json：所有設定項目逐一說明</h1>
+<blockquote>
+<p><code>/config</code> 面板只列出常用選項。<strong>所有</strong>設定都能寫在 <code>settings.json</code> 檔案裡。本章先教你設定檔的觀念，再把 v2.1.312 的全部設定 key（共 245 項）逐一說明並附範例。</p>
+</blockquote>
+<h2>8.1 設定檔在哪裡？</h2>
+<table>
+<thead>
+<tr>
+<th>範圍</th>
+<th>檔案位置</th>
+<th>影響誰</th>
+<th>適合放</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>使用者</td>
+<td><code>~/.claude/settings.json</code>（Windows：<code>C:\Users\你\.claude\settings.json</code>）</td>
+<td>你在這台電腦的所有專案</td>
+<td>個人偏好：主題、語言、預設模型</td>
+</tr>
+<tr>
+<td>專案（共享）</td>
+<td>專案內 <code>.claude/settings.json</code></td>
+<td>所有用這個專案的人（commit 進 git）</td>
+<td>團隊共用的權限、hooks、plugins</td>
+</tr>
+<tr>
+<td>專案（本機）</td>
+<td>專案內 <code>.claude/settings.local.json</code></td>
+<td>只有你、只在這個專案（自動排除在 git 外）</td>
+<td>個人例外設定；權限提示選「不再詢問」時寫在這裡</td>
+</tr>
+<tr>
+<td>組織管理</td>
+<td>IT 部署的 <code>managed-settings.json</code>、MDM 或後台下發</td>
+<td>公司所有人</td>
+<td>資安政策</td>
+</tr>
+<tr>
+<td>全域</td>
+<td><code>~/.claude.json</code></td>
+<td>你</td>
+<td>Claude Code 自己維護（帳號、MCP、少數介面選項），一般不用手改</td>
+</tr>
+</tbody>
+</table>
+<p>剛安裝時這些檔案都不存在，第一次在 <code>/config</code> 改設定或回答「不再詢問」時才會自動建立。也可以自己用編輯器建立。</p>
+<h2>8.2 優先順序：誰說了算？</h2>
+<p>同一個設定寫在多個檔案時，<strong>上面的蓋過下面的</strong>：</p>
+<pre><code>① 組織管理（最高，無法被覆蓋）
+② 命令列 --settings（只影響這次）
+③ 專案本機 .claude/settings.local.json
+④ 專案共享 .claude/settings.json
+⑤ 使用者 ~/.claude/settings.json（最低）
+</code></pre>
+<p>例外：清單類設定（例如 <code>permissions.allow</code>）會<strong>合併</strong>而不是覆蓋。</p>
+<blockquote>
+<p>🔍 設定沒生效？在 session 中輸入 <code>/status</code>，看「Setting sources」列出實際載入了哪些檔案；在終端機執行 <code>claude doctor</code> 可列出寫錯而被忽略的設定。</p>
+</blockquote>
+<h2>8.3 設定檔的寫法</h2>
+<p>設定檔是<strong>嚴格的 JSON</strong>：用大括號包起來、key 用雙引號、項目之間用逗號，<strong>最後一項後面不能有逗號，也不能寫註解</strong>。</p>
+<pre><code class="language-json">{
+  &quot;$schema&quot;: &quot;https://json.schemastore.org/claude-code-settings.json&quot;,
+  &quot;language&quot;: &quot;繁體中文&quot;,
+  &quot;model&quot;: &quot;opus&quot;,
+  &quot;outputStyle&quot;: &quot;Explanatory&quot;,
+  &quot;permissions&quot;: {
+    &quot;allow&quot;: [&quot;Bash(npm run test *)&quot;, &quot;Bash(git diff *)&quot;],
+    &quot;deny&quot;: [&quot;Read(./.env)&quot;]
+  }
+}
+</code></pre>
+<ul>
+<li>第一行 <code>$schema</code> 讓 VS Code 等編輯器提供自動完成與錯誤提示，強烈建議加上。</li>
+<li>本章表格中的「範例」是<strong>一個片段</strong>，貼進大括號內即可；有多個項目時記得用逗號分隔。</li>
+<li>存檔後大部分設定會<strong>立即生效</strong>（Claude Code 會監看設定檔）；<code>model</code> 與 effort 要在 session 中用 <code>/model</code>、<code>/effort</code> 才會即時切換。</li>
+<li>懶得手改？在 session 中輸入 <code>/update-config 你想要的設定</code>，Claude 會幫你改對的檔案。</li>
+</ul>
+<h2>8.4 只想試一次？</h2>
+<pre><code class="language-bash">claude --settings '{&quot;model&quot;: &quot;sonnet&quot;, &quot;outputStyle&quot;: &quot;Concise&quot;}'
+</code></pre>
+<p>只影響這次啟動，不寫入任何檔案。</p>
+<h2>8.5 「範圍」欄位說明</h2>
+<p>下方表格的「範圍」表示這個 key 能寫在哪裡才有效：</p>
+<table>
+<thead>
+<tr>
+<th>標示</th>
+<th>意思</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>任何設定檔</td>
+<td>使用者、專案、本機、組織都可以</td>
+</tr>
+<tr>
+<td>使用者／組織</td>
+<td>只在 <code>~/.claude/settings.json</code>、<code>--settings</code> 或組織設定有效（寫在專案檔會被忽略，避免別人 commit 進來的設定影響你）</td>
+</tr>
+<tr>
+<td>使用者／本機／組織</td>
+<td>同上，另外也接受 <code>.claude/settings.local.json</code></td>
+</tr>
+<tr>
+<td>僅組織管理</td>
+<td>只有 IT 部署的管理設定有效，一般使用者寫了也沒用</td>
+</tr>
+<tr>
+<td>~/.claude.json</td>
+<td>全域設定檔中的選項（通常透過 <code>/config</code> 修改）</td>
+</tr>
+</tbody>
+</table>
+<p>標有「格式示意」的範例，表示該設定是較複雜的物件，範例展示用途與大致結構；正式使用前請對照<a href="https://code.claude.com/docs/en/settings-reference">官方 All settings 文件</a>確認完整欄位。</p>
+<h2>8.6 全部設定項目</h2>
+<p>快速跳轉：<a href="#cat-model">🧠 模型與推理</a>｜<a href="#cat-perm">🛡️ 權限</a>｜<a href="#cat-sandbox">📦 沙盒（Sandbox）</a>｜<a href="#cat-context">📚 Context、壓縮與紀錄</a>｜<a href="#cat-memory">📝 記憶、指示與 Git</a>｜<a href="#cat-ext">🧩 Hooks、Skills 與 Plugins</a>｜<a href="#cat-mcp">🔌 MCP 外部工具</a>｜<a href="#cat-parallel">🚀 平行代理、工作流程與 Worktree</a>｜<a href="#cat-ui">🎨 介面與操作體驗</a>｜<a href="#cat-remote">🔔 通知、遠端與桌面整合</a>｜<a href="#cat-env">🔑 環境、驗證與更新</a>｜<a href="#cat-managed">🏢 組織管理專用</a>｜<a href="#cat-deprecated">🗄️ 已棄用（看到舊教學時參考）</a></p>
+<p><a id="cat-model"></a></p>
+<h3>🧠 模型與推理</h3>
+<p>決定 Claude 用哪個模型、想得多深、回覆什麼語言。</p>
+<table>
+<thead>
+<tr>
+<th>設定 key</th>
+<th>範圍</th>
+<th>說明</th>
+<th>範例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>model</code></td>
+<td>任何設定檔</td>
+<td>新 session 一開始使用的模型。可填別名（opus、sonnet、haiku、fable、best、opusplan）或完整模型 ID。</td>
+<td><code>"model": "opus"</code></td>
+</tr>
+<tr>
+<td><code>fallbackModel</code></td>
+<td>任何設定檔</td>
+<td>主要模型過載或無法使用時，依序改用的備援模型（最多三個）。</td>
+<td><code>"fallbackModel": ["sonnet", "haiku"]</code></td>
+</tr>
+<tr>
+<td><code>language</code></td>
+<td>任何設定檔</td>
+<td>Claude 回覆與語音聽寫使用的語言，原樣傳給 Claude。想要繁中回覆就設這個。</td>
+<td><code>"language": "繁體中文（台灣）"</code></td>
+</tr>
+<tr>
+<td><code>effortLevel</code></td>
+<td>任何設定檔</td>
+<td>預設推理強度（還沒為某模型另存等級時使用）。可選 low、medium、high、xhigh。</td>
+<td><code>"effortLevel": "high"</code></td>
+</tr>
+<tr>
+<td><code>modelSettings</code></td>
+<td>任何設定檔</td>
+<td>依模型分別記住 effort 與自動壓縮門檻；/model、/effort 選擇時會自動寫入。</td>
+<td><code>"modelSettings": { "claude-opus-5-5": { "effortLevel": "high" } }</code></td>
+</tr>
+<tr>
+<td><code>maxEffortLevel</code></td>
+<td>任何設定檔</td>
+<td>推理強度上限，任何更高的選擇都會被壓到這裡（可全域或依模型）。適合控制成本。</td>
+<td><code>"maxEffortLevel": "high"</code></td>
+</tr>
+<tr>
+<td><code>alwaysThinkingEnabled</code></td>
+<td>任何設定檔</td>
+<td>設為 false 關閉延伸思考（Opus/Sonnet/Haiku 5.5 與 Fable 永遠開啟，設了也無效）。</td>
+<td><code>"alwaysThinkingEnabled": false</code></td>
+</tr>
+<tr>
+<td><code>showThinkingSummaries</code></td>
+<td>任何設定檔</td>
+<td>在對話中顯示 Claude 的思考摘要，而不是折疊起來。</td>
+<td><code>"showThinkingSummaries": true</code></td>
+</tr>
+<tr>
+<td><code>fastMode</code></td>
+<td>任何設定檔</td>
+<td>開啟 Fast mode（Opus 速度約 2.5 倍、單價較高，需 usage credits）。</td>
+<td><code>"fastMode": true</code></td>
+</tr>
+<tr>
+<td><code>fastModePerSessionOptIn</code></td>
+<td>任何設定檔</td>
+<td>每個新 session 都從 Fast mode 關閉開始，需要時再 /fast 開啟，避免意外花費。</td>
+<td><code>"fastModePerSessionOptIn": true</code></td>
+</tr>
+<tr>
+<td><code>advisorModel</code></td>
+<td>任何設定檔</td>
+<td>啟用「顧問工具」：關鍵時刻請另一個模型給建議，這裡填顧問模型。</td>
+<td><code>"advisorModel": "opus"</code></td>
+</tr>
+<tr>
+<td><code>ultracode</code></td>
+<td>任何設定檔</td>
+<td>讓 Claude 對每個實質任務都規劃多代理「動態工作流程」。很耗 token。</td>
+<td><code>"ultracode": true</code></td>
+</tr>
+<tr>
+<td><code>switchModelsOnFlag</code></td>
+<td>任何設定檔</td>
+<td>訊息被安全機制標記時：true 自動換模型繼續；false 暫停 session 讓你決定。</td>
+<td><code>"switchModelsOnFlag": false</code></td>
+</tr>
+<tr>
+<td><code>availableModels</code></td>
+<td>任何設定檔</td>
+<td>限制可選的模型清單（常由公司設定）。未設定代表全部可選。</td>
+<td><code>"availableModels": ["sonnet", "haiku"]</code></td>
+</tr>
+<tr>
+<td><code>availableModelsMatch</code></td>
+<td>僅組織管理</td>
+<td>availableModels 的比對方式：prefix（預設，涵蓋衍生版本）或 exact。</td>
+<td><code>"availableModelsMatch": "exact"</code></td>
+</tr>
+<tr>
+<td><code>deniedModels</code></td>
+<td>僅組織管理</td>
+<td>封鎖特定模型，即使 availableModels 允許也不能選。</td>
+<td><code>"deniedModels": ["claude-opus-5-5"]</code></td>
+</tr>
+<tr>
+<td><code>enforceAvailableModels</code></td>
+<td>任何設定檔</td>
+<td>讓「Default」選項也必須落在 availableModels 之內。</td>
+<td><code>"enforceAvailableModels": true</code></td>
+</tr>
+<tr>
+<td><code>modelPicker</code></td>
+<td>使用者／組織</td>
+<td>自訂 /model 選單要列出哪些模型列、標籤與說明。</td>
+<td><code>"modelPicker": { "options": [ { "model": "sonnet", "label": "日常用" } ] }</code></td>
+</tr>
+<tr>
+<td><code>modelOverrides</code></td>
+<td>任何設定檔</td>
+<td>把 Anthropic 模型 ID 對應到雲端供應商的 ID（例如 Bedrock ARN）。</td>
+<td><code>"modelOverrides": { "claude-opus-5-5": "arn:aws:bedrock:us-east-1:123456789012:inference-profile/example" }</code></td>
+</tr>
+<tr>
+<td><code>modelPricing</code></td>
+<td>僅組織管理</td>
+<td>以公司合約價回報花費（給管理員）。</td>
+<td><code>"modelPricing": { "claude-opus-5-5": { "input": 3.2, "output": 16 } }</code><br><sub>格式示意</sub></td>
+</tr>
+</tbody>
+</table>
+<p><a id="cat-perm"></a></p>
+<h3>🛡️ 權限</h3>
+<p>決定 Claude 哪些動作可以直接做、哪些要先問你、哪些永遠禁止。</p>
+<table>
+<thead>
+<tr>
+<th>設定 key</th>
+<th>範圍</th>
+<th>說明</th>
+<th>範例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>permissions</code></td>
+<td>任何設定檔</td>
+<td>權限設定的總容器，包含下面各子項。</td>
+<td><code>"permissions": { "allow": [], "ask": [], "deny": [] }</code></td>
+</tr>
+<tr>
+<td><code>permissions.allow</code></td>
+<td>任何設定檔</td>
+<td>不用問就允許的工具使用規則。</td>
+<td><code>"permissions": { "allow": ["Bash(npm run test *)", "Bash(git diff *)"] }</code></td>
+</tr>
+<tr>
+<td><code>permissions.ask</code></td>
+<td>任何設定檔</td>
+<td>每次都要先問你的規則（即使其他地方允許）。</td>
+<td><code>"permissions": { "ask": ["Bash(git push *)"] }</code></td>
+</tr>
+<tr>
+<td><code>permissions.deny</code></td>
+<td>任何設定檔</td>
+<td>永遠禁止的規則，任何模式都有效，例如禁止讀取秘密檔案。</td>
+<td><code>"permissions": { "deny": ["Read(./.env)", "Read(./secrets/**)"] }</code></td>
+</tr>
+<tr>
+<td><code>permissions.defaultMode</code></td>
+<td>任何設定檔</td>
+<td>新 session 的起始權限模式：default(Manual)、acceptEdits、plan、auto、dontAsk、bypassPermissions。auto 與 bypass 不能從專案檔設定。</td>
+<td><code>"permissions": { "defaultMode": "acceptEdits" }</code></td>
+</tr>
+<tr>
+<td><code>permissions.additionalDirectories</code></td>
+<td>任何設定檔</td>
+<td>讓 Claude 也能存取目前資料夾以外的目錄。</td>
+<td><code>"permissions": { "additionalDirectories": ["../shared-lib"] }</code></td>
+</tr>
+<tr>
+<td><code>permissions.blockReadsOutsideWorkingDirectories</code></td>
+<td>任何設定檔</td>
+<td>在所有模式中都禁止讀取工作目錄以外的檔案。</td>
+<td><code>"permissions": { "blockReadsOutsideWorkingDirectories": true }</code></td>
+</tr>
+<tr>
+<td><code>permissions.disableBypassPermissionsMode</code></td>
+<td>任何設定檔</td>
+<td>禁止進入 bypassPermissions（完全不問）模式。</td>
+<td><code>"permissions": { "disableBypassPermissionsMode": "disable" }</code></td>
+</tr>
+<tr>
+<td><code>disableAutoMode</code></td>
+<td>任何設定檔</td>
+<td>把 Auto mode 從 Shift+Tab 循環中移除。</td>
+<td><code>"disableAutoMode": "disable"</code></td>
+</tr>
+<tr>
+<td><code>autoMode</code></td>
+<td>使用者／組織</td>
+<td>為 Auto mode 分類器加入你自己的允許／封鎖規則與環境描述（可用 /auto-mode-setup 產生）。</td>
+<td><code>"autoMode": { "environment": ["$defaults", "staging.example.com 是測試機，可以部署"] }</code></td>
+</tr>
+<tr>
+<td><code>autoMode.classifyAllShell</code></td>
+<td>使用者／組織</td>
+<td>所有 shell 指令都交給分類器審查（包含原本白名單內的）。</td>
+<td><code>"autoMode": { "classifyAllShell": true }</code></td>
+</tr>
+<tr>
+<td><code>useAutoModeDuringPlan</code></td>
+<td>使用者／本機／組織</td>
+<td>Plan 模式下的 shell 指令也讓分類器自動審查；false 則改為詢問你。</td>
+<td><code>"useAutoModeDuringPlan": false</code></td>
+</tr>
+<tr>
+<td><code>skipAutoPermissionPrompt</code></td>
+<td>使用者／組織</td>
+<td>跳過第一次啟用 Auto mode 時的說明提示。</td>
+<td><code>"skipAutoPermissionPrompt": true</code></td>
+</tr>
+<tr>
+<td><code>skipDangerousModePermissionPrompt</code></td>
+<td>使用者／本機／組織</td>
+<td>跳過進入 bypassPermissions 時的確認對話框（不建議）。</td>
+<td><code>"skipDangerousModePermissionPrompt": true</code></td>
+</tr>
+<tr>
+<td><code>allowManagedPermissionRulesOnly</code></td>
+<td>僅組織管理</td>
+<td>只採用組織管理設定中的權限規則，忽略個人與專案規則。</td>
+<td><code>"allowManagedPermissionRulesOnly": true</code></td>
+</tr>
+</tbody>
+</table>
+<p><a id="cat-sandbox"></a></p>
+<h3>📦 沙盒（Sandbox）</h3>
+<p>用作業系統層級限制 Claude 執行的 shell 指令能碰到的檔案與網路。</p>
+<table>
+<thead>
+<tr>
+<th>設定 key</th>
+<th>範圍</th>
+<th>說明</th>
+<th>範例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sandbox</code></td>
+<td>任何設定檔</td>
+<td>沙盒設定的總容器（macOS、Linux、WSL2）。</td>
+<td><code>"sandbox": { "enabled": true }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.enabled</code></td>
+<td>任何設定檔</td>
+<td>開啟 Bash 沙盒。也可在 session 中用 /sandbox 切換。</td>
+<td><code>"sandbox": { "enabled": true }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.autoAllowBashIfSandboxed</code></td>
+<td>任何設定檔</td>
+<td>在沙盒中執行的指令自動核准、不跳提示。</td>
+<td><code>"sandbox": { "autoAllowBashIfSandboxed": true }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.allowUnsandboxedCommands</code></td>
+<td>任何設定檔</td>
+<td>被沙盒擋下時，是否允許 Claude 改在沙盒外重試（仍需你核准）。</td>
+<td><code>"sandbox": { "allowUnsandboxedCommands": false }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.excludedCommands</code></td>
+<td>任何設定檔</td>
+<td>這些指令一律在沙盒外執行（走一般權限流程）。</td>
+<td><code>"sandbox": { "excludedCommands": ["docker compose *"] }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.failIfUnavailable</code></td>
+<td>任何設定檔</td>
+<td>沙盒無法啟動時直接拒絕開始，而不是不受保護地執行。</td>
+<td><code>"sandbox": { "failIfUnavailable": true }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.filesystem</code></td>
+<td>任何設定檔</td>
+<td>檔案系統規則的容器。</td>
+<td><code>"sandbox": { "filesystem": { "allowWrite": ["/tmp/build"] } }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.filesystem.allowWrite</code></td>
+<td>任何設定檔</td>
+<td>額外允許寫入的路徑。</td>
+<td><code>"sandbox": { "filesystem": { "allowWrite": ["~/.kube", "/tmp/build"] } }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.filesystem.denyWrite</code></td>
+<td>任何設定檔</td>
+<td>禁止寫入的路徑。</td>
+<td><code>"sandbox": { "filesystem": { "denyWrite": ["./config/prod"] } }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.filesystem.denyRead</code></td>
+<td>任何設定檔</td>
+<td>禁止讀取的路徑（預設沙盒可讀大部分檔案，包括 ~/.ssh）。</td>
+<td><code>"sandbox": { "filesystem": { "denyRead": ["~/.ssh", "~/.aws"] } }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.filesystem.allowRead</code></td>
+<td>任何設定檔</td>
+<td>在 denyRead 範圍內重新開放可讀的子路徑。</td>
+<td><code>"sandbox": { "filesystem": { "denyRead": ["~/"], "allowRead": ["."] } }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.filesystem.disabled</code></td>
+<td>使用者／組織</td>
+<td>關閉檔案隔離、只保留網路隔離。</td>
+<td><code>"sandbox": { "filesystem": { "disabled": true } }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.filesystem.allowManagedReadPathsOnly</code></td>
+<td>僅組織管理</td>
+<td>禁止開發者自行重新開放被組織封鎖的讀取路徑。</td>
+<td><code>"sandbox": { "filesystem": { "allowManagedReadPathsOnly": true } }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.network</code></td>
+<td>任何設定檔</td>
+<td>網路規則的容器。</td>
+<td><code>"sandbox": { "network": { "allowedDomains": ["github.com"] } }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.network.allowedDomains</code></td>
+<td>任何設定檔</td>
+<td>預先允許、不用詢問就能連線的網域（支援 *.）。</td>
+<td><code>"sandbox": { "network": { "allowedDomains": ["github.com", "*.npmjs.org"] } }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.network.deniedDomains</code></td>
+<td>任何設定檔</td>
+<td>封鎖的網域（即使符合允許的萬用字元也擋）。</td>
+<td><code>"sandbox": { "network": { "deniedDomains": ["evil.example.com"] } }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.network.strictAllowlist</code></td>
+<td>使用者／組織</td>
+<td>不在允許清單的網域直接拒絕，而不是詢問你。</td>
+<td><code>"sandbox": { "network": { "strictAllowlist": true } }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.network.allowLocalBinding</code></td>
+<td>任何設定檔</td>
+<td>允許沙盒內指令在 macOS 上監聽本機埠（例如啟動 dev server）。</td>
+<td><code>"sandbox": { "network": { "allowLocalBinding": true } }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.network.allowUnixSockets</code></td>
+<td>任何設定檔</td>
+<td>macOS 上允許連線的 Unix socket 路徑。</td>
+<td><code>"sandbox": { "network": { "allowUnixSockets": ["/var/run/docker.sock"] } }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.network.allowAllUnixSockets</code></td>
+<td>任何設定檔</td>
+<td>允許連線所有 Unix socket。</td>
+<td><code>"sandbox": { "network": { "allowAllUnixSockets": true } }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.network.allowMachLookup</code></td>
+<td>任何設定檔</td>
+<td>允許 macOS 工具連到 XPC 服務。</td>
+<td><code>"sandbox": { "network": { "allowMachLookup": ["com.apple.coresimulator.*"] } }</code><br><sub>格式示意</sub></td>
+</tr>
+<tr>
+<td><code>sandbox.network.httpProxyPort</code></td>
+<td>任何設定檔</td>
+<td>改用你自己的 HTTP proxy。</td>
+<td><code>"sandbox": { "network": { "httpProxyPort": 8080 } }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.network.socksProxyPort</code></td>
+<td>任何設定檔</td>
+<td>改用你自己的 SOCKS proxy。</td>
+<td><code>"sandbox": { "network": { "socksProxyPort": 1080 } }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.network.tlsTerminate</code></td>
+<td>使用者／組織</td>
+<td>讓沙盒 proxy 解開 TLS 以檢查 HTTPS 請求內容。</td>
+<td><code>"sandbox": { "network": { "tlsTerminate": true } }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.network.allowManagedDomainsOnly</code></td>
+<td>僅組織管理</td>
+<td>網路允許清單只能由組織設定。</td>
+<td><code>"sandbox": { "network": { "allowManagedDomainsOnly": true } }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.credentials</code></td>
+<td>任何設定檔</td>
+<td>在沙盒中隱藏或遮罩憑證（環境變數、檔案）。</td>
+<td><code>"sandbox": { "credentials": { "envVars": { "GITHUB_TOKEN": "mask" } } }</code><br><sub>格式示意</sub></td>
+</tr>
+<tr>
+<td><code>sandbox.credentials.envVars</code></td>
+<td>任何設定檔</td>
+<td>沙盒中要移除或遮罩的環境變數。</td>
+<td><code>"sandbox": { "credentials": { "envVars": { "AWS_SECRET_ACCESS_KEY": "unset" } } }</code><br><sub>格式示意</sub></td>
+</tr>
+<tr>
+<td><code>sandbox.credentials.files</code></td>
+<td>任何設定檔</td>
+<td>封鎖或遮罩憑證檔的讀取。</td>
+<td><code>"sandbox": { "credentials": { "files": { "~/.npmrc": "block" } } }</code><br><sub>格式示意</sub></td>
+</tr>
+<tr>
+<td><code>sandbox.credentials.allowPlaintextInject</code></td>
+<td>使用者／組織</td>
+<td>在信任的測試網路上，允許遮罩的憑證送到純 HTTP。</td>
+<td><code>"sandbox": { "credentials": { "allowPlaintextInject": true } }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.credentials.awsPairs</code></td>
+<td>使用者／組織</td>
+<td>把 AWS 金鑰變數配對，讓 proxy 能重新簽章。</td>
+<td><code>"sandbox": { "credentials": { "awsPairs": [["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"]] } }</code><br><sub>格式示意</sub></td>
+</tr>
+<tr>
+<td><code>sandbox.credentials.sigv4</code></td>
+<td>使用者／組織</td>
+<td>遇到串流、預簽章或 SigV4A 請求時是失敗或放行。</td>
+<td><code>"sandbox": { "credentials": { "sigv4": "fail" } }</code><br><sub>格式示意</sub></td>
+</tr>
+<tr>
+<td><code>sandbox.allowAppleEvents</code></td>
+<td>使用者／組織</td>
+<td>允許沙盒指令在 macOS 送出 Apple Events（控制其他 App）。</td>
+<td><code>"sandbox": { "allowAppleEvents": true }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.enableWeakerNestedSandbox</code></td>
+<td>任何設定檔</td>
+<td>在無特權容器內執行較弱的 Linux 沙盒。</td>
+<td><code>"sandbox": { "enableWeakerNestedSandbox": true }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.enableWeakerNetworkIsolation</code></td>
+<td>任何設定檔</td>
+<td>macOS 上讓 gh、gcloud、terraform 在 MITM proxy 後仍能驗證 TLS。</td>
+<td><code>"sandbox": { "enableWeakerNetworkIsolation": true }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.allowNestedUserNamespaces</code></td>
+<td>任何設定檔</td>
+<td>允許沙盒內建立 user namespace（Chromium、rootless podman 需要）；可能削弱檔案保護。</td>
+<td><code>"sandbox": { "allowNestedUserNamespaces": true }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.ignoreViolations</code></td>
+<td>任何設定檔</td>
+<td>對預期中的探測不顯示違規報告。</td>
+<td><code>"sandbox": { "ignoreViolations": { "*": ["/usr/local/share"] } }</code><br><sub>格式示意</sub></td>
+</tr>
+<tr>
+<td><code>sandbox.ripgrep</code></td>
+<td>使用者／組織</td>
+<td>在沙盒中使用你自己的 ripgrep 執行檔。</td>
+<td><code>"sandbox": { "ripgrep": "/opt/bin/rg" }</code><br><sub>格式示意</sub></td>
+</tr>
+<tr>
+<td><code>sandbox.bwrapPath</code></td>
+<td>僅組織管理</td>
+<td>bubblewrap 不在 PATH 時指定路徑。</td>
+<td><code>"sandbox": { "bwrapPath": "/opt/bin/bwrap" }</code></td>
+</tr>
+<tr>
+<td><code>sandbox.socatPath</code></td>
+<td>僅組織管理</td>
+<td>socat 不在 PATH 時指定路徑。</td>
+<td><code>"sandbox": { "socatPath": "/opt/bin/socat" }</code></td>
+</tr>
+</tbody>
+</table>
+<p><a id="cat-context"></a></p>
+<h3>📚 Context、壓縮與紀錄</h3>
+<p>控制對話記憶空間怎麼用、何時摘要、保存多久。</p>
+<table>
+<thead>
+<tr>
+<th>設定 key</th>
+<th>範圍</th>
+<th>說明</th>
+<th>範例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>autoCompactEnabled</code></td>
+<td>任何設定檔</td>
+<td>context 快滿時自動摘要壓縮對話（建議保持開啟）。</td>
+<td><code>"autoCompactEnabled": true</code></td>
+</tr>
+<tr>
+<td><code>autoCompactWindow</code></td>
+<td>任何設定檔</td>
+<td>context 用到多少 token 時觸發自動壓縮（10 萬～100 萬）。</td>
+<td><code>"autoCompactWindow": 500000</code></td>
+</tr>
+<tr>
+<td><code>idleCompaction</code></td>
+<td>任何設定檔</td>
+<td>設為 false 時，閒置的長對話不會在快取過期前先壓縮。</td>
+<td><code>"idleCompaction": false</code></td>
+</tr>
+<tr>
+<td><code>promptCacheTtl</code></td>
+<td>任何設定檔</td>
+<td>主對話的提示快取保存時間：5m 或 1h（訂閱預設 1h）。</td>
+<td><code>"promptCacheTtl": "1h"</code></td>
+</tr>
+<tr>
+<td><code>subagentPromptCacheTtl</code></td>
+<td>任何設定檔</td>
+<td>subagent 與工作流程代理的快取保存時間。</td>
+<td><code>"subagentPromptCacheTtl": "1h"</code></td>
+</tr>
+<tr>
+<td><code>bashOutputMaxChars</code></td>
+<td>任何設定檔</td>
+<td>指令成功輸出時，直接給 Claude 看的最大字元數（預設 30000），超過的存成檔案。</td>
+<td><code>"bashOutputMaxChars": 60000</code></td>
+</tr>
+<tr>
+<td><code>skillListingBudgetFraction</code></td>
+<td>任何設定檔</td>
+<td>保留多少比例的 context 放 skills 清單（預設 0.01 = 1%）。</td>
+<td><code>"skillListingBudgetFraction": 0.02</code></td>
+</tr>
+<tr>
+<td><code>skillListingMaxDescChars</code></td>
+<td>任何設定檔</td>
+<td>每個 skill 描述在清單中的最大字元數（預設 1536）。</td>
+<td><code>"skillListingMaxDescChars": 800</code></td>
+</tr>
+<tr>
+<td><code>fileCheckpointingEnabled</code></td>
+<td>任何設定檔</td>
+<td>編輯前先快照檔案，讓 /rewind 能還原程式碼。</td>
+<td><code>"fileCheckpointingEnabled": true</code></td>
+</tr>
+<tr>
+<td><code>bashEditDiffEnabled</code></td>
+<td>使用者／組織</td>
+<td>記錄 Bash 指令改動了哪些檔案並顯示差異。</td>
+<td><code>"bashEditDiffEnabled": false</code></td>
+</tr>
+<tr>
+<td><code>cleanupPeriodDays</code></td>
+<td>任何設定檔</td>
+<td>對話紀錄保存天數（預設 30，最少 1）。</td>
+<td><code>"cleanupPeriodDays": 90</code></td>
+</tr>
+<tr>
+<td><code>desktopSessionCleanupPeriodDays</code></td>
+<td>使用者／組織</td>
+<td>桌面版產生的對話紀錄保存上限天數（0 = 不限）。</td>
+<td><code>"desktopSessionCleanupPeriodDays": 60</code></td>
+</tr>
+<tr>
+<td><code>plansDirectory</code></td>
+<td>任何設定檔</td>
+<td>Plan 模式寫出計畫檔的位置（相對專案根目錄，預設 ~/.claude/plans/）。</td>
+<td><code>"plansDirectory": "docs/plans"</code></td>
+</tr>
+</tbody>
+</table>
+<p><a id="cat-memory"></a></p>
+<h3>📝 記憶、指示與 Git</h3>
+<p>控制 Claude 會讀到哪些指示、自動記住什麼、commit 怎麼署名。</p>
+<table>
+<thead>
+<tr>
+<th>設定 key</th>
+<th>範圍</th>
+<th>說明</th>
+<th>範例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>autoMemoryEnabled</code></td>
+<td>任何設定檔</td>
+<td>開關自動記憶（Claude 自己記下你的偏好與專案脈絡）。</td>
+<td><code>"autoMemoryEnabled": false</code></td>
+</tr>
+<tr>
+<td><code>autoMemoryDirectory</code></td>
+<td>任何設定檔</td>
+<td>自動記憶的存放資料夾（需絕對路徑或 ~/ 開頭）。</td>
+<td><code>"autoMemoryDirectory": "~/my-claude-memory"</code></td>
+</tr>
+<tr>
+<td><code>claudeMdExcludes</code></td>
+<td>任何設定檔</td>
+<td>不要載入的 CLAUDE.md（路徑或萬用字元），適合大型 monorepo。</td>
+<td><code>"claudeMdExcludes": ["**/legacy/**/CLAUDE.md"]</code></td>
+</tr>
+<tr>
+<td><code>claudeMd</code></td>
+<td>僅組織管理</td>
+<td>組織統一注入的 CLAUDE.md 內容。</td>
+<td><code>"claudeMd": "所有程式碼註解使用英文。"</code></td>
+</tr>
+<tr>
+<td><code>includeGitInstructions</code></td>
+<td>任何設定檔</td>
+<td>是否在系統提示中包含內建的 commit／PR 流程指示。</td>
+<td><code>"includeGitInstructions": false</code></td>
+</tr>
+<tr>
+<td><code>attribution</code></td>
+<td>任何設定檔</td>
+<td>自訂 commit 與 PR 的署名文字（設為空字串可隱藏）。</td>
+<td><code>"attribution": { "commit": "", "pr": "" }</code></td>
+</tr>
+<tr>
+<td><code>attribution.commit</code></td>
+<td>任何設定檔</td>
+<td>commit 結尾的署名（trailer）。</td>
+<td><code>"attribution": { "commit": "Assisted-by: Claude" }</code></td>
+</tr>
+<tr>
+<td><code>attribution.pr</code></td>
+<td>任何設定檔</td>
+<td>PR 描述中的署名文字。</td>
+<td><code>"attribution": { "pr": "🤖 由 Claude Code 協助產生" }</code></td>
+</tr>
+<tr>
+<td><code>attribution.sessionUrl</code></td>
+<td>任何設定檔</td>
+<td>雲端／遠端 session 的 commit 不附 session 連結。</td>
+<td><code>"attribution": { "sessionUrl": false }</code></td>
+</tr>
+<tr>
+<td><code>outputStyle</code></td>
+<td>任何設定檔</td>
+<td>回覆風格：Default、Proactive、Concise、Explanatory、Learning 或自訂（大小寫要對）。</td>
+<td><code>"outputStyle": "Explanatory"</code></td>
+</tr>
+<tr>
+<td><code>agent</code></td>
+<td>任何設定檔</td>
+<td>每個 session 都以某個 subagent 身分當主代理啟動。</td>
+<td><code>"agent": "code-reviewer"</code></td>
+</tr>
+</tbody>
+</table>
+<p><a id="cat-ext"></a></p>
+<h3>🧩 Hooks、Skills 與 Plugins</h3>
+<p>擴充功能的開關與管控。</p>
+<table>
+<thead>
+<tr>
+<th>設定 key</th>
+<th>範圍</th>
+<th>說明</th>
+<th>範例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hooks</code></td>
+<td>任何設定檔</td>
+<td>在生命週期事件（工具前後、送出提示、結束…）自動執行指令。</td>
+<td><code>"hooks": { "PostToolUse": [ { "matcher": "Edit|Write", "hooks": [ { "type": "command", "command": "npx prettier --write ." } ] } ] }</code></td>
+</tr>
+<tr>
+<td><code>disableAllHooks</code></td>
+<td>任何設定檔</td>
+<td>停用所有 hooks、狀態列指令與 @ 檔案建議指令（含使用者安裝的 mods）。</td>
+<td><code>"disableAllHooks": true</code></td>
+</tr>
+<tr>
+<td><code>allowManagedHooksOnly</code></td>
+<td>僅組織管理</td>
+<td>只執行組織部署的 hooks。</td>
+<td><code>"allowManagedHooksOnly": true</code></td>
+</tr>
+<tr>
+<td><code>allowedHttpHookUrls</code></td>
+<td>任何設定檔</td>
+<td>HTTP hooks 只能送到這些網址（支援 *）。</td>
+<td><code>"allowedHttpHookUrls": ["https://hooks.example.com/*"]</code></td>
+</tr>
+<tr>
+<td><code>httpHookAllowedEnvVars</code></td>
+<td>任何設定檔</td>
+<td>HTTP hooks 可放進 header 的環境變數白名單。</td>
+<td><code>"httpHookAllowedEnvVars": ["HOOK_TOKEN"]</code></td>
+</tr>
+<tr>
+<td><code>statusLine</code></td>
+<td>任何設定檔</td>
+<td>在提示框下方顯示自訂狀態列（執行你的指令，stdin 收到 session JSON）。</td>
+<td><code>"statusLine": { "type": "command", "command": "~/.claude/statusline.sh" }</code></td>
+</tr>
+<tr>
+<td><code>subagentStatusLine</code></td>
+<td>任何設定檔</td>
+<td>自訂 subagent 面板每一列的顯示。</td>
+<td><code>"subagentStatusLine": { "type": "command", "command": "~/.claude/agent-row.sh" }</code><br><sub>格式示意</sub></td>
+</tr>
+<tr>
+<td><code>fileSuggestion</code></td>
+<td>任何設定檔</td>
+<td>用你自己的指令提供 @ 檔案自動完成清單。</td>
+<td><code>"fileSuggestion": { "type": "command", "command": "~/.claude/list-files.sh" }</code></td>
+</tr>
+<tr>
+<td><code>respectGitignore</code></td>
+<td>任何設定檔</td>
+<td>@ 檔案選單是否排除 .gitignore 中的檔案（預設 true）。</td>
+<td><code>"respectGitignore": false</code></td>
+</tr>
+<tr>
+<td><code>disableSkillShellExecution</code></td>
+<td>任何設定檔</td>
+<td>禁止 skills／自訂指令中的 !<code>指令</code> 內嵌執行。</td>
+<td><code>"disableSkillShellExecution": true</code></td>
+</tr>
+<tr>
+<td><code>disableBundledSkills</code></td>
+<td>任何設定檔</td>
+<td>停用內建 skills 與 workflows（/code-review、/batch…）。</td>
+<td><code>"disableBundledSkills": true</code></td>
+</tr>
+<tr>
+<td><code>skillOverrides</code></td>
+<td>任何設定檔</td>
+<td>不改 SKILL.md 就隱藏或縮減某個 skill：on、name-only、user-invocable-only、off。</td>
+<td><code>"skillOverrides": { "dataviz": "off" }</code></td>
+</tr>
+<tr>
+<td><code>syncClaudeAiSkills</code></td>
+<td>使用者／本機／組織</td>
+<td>設 false 停止載入你在 claude.ai 開啟的 skills。</td>
+<td><code>"syncClaudeAiSkills": false</code></td>
+</tr>
+<tr>
+<td><code>syncClaudeAiPlugins</code></td>
+<td>使用者／本機／組織</td>
+<td>設 false 停止載入你在 claude.ai 開啟的 plugins。</td>
+<td><code>"syncClaudeAiPlugins": false</code></td>
+</tr>
+<tr>
+<td><code>enabledPlugins</code></td>
+<td>任何設定檔</td>
+<td>依範圍開關個別 plugin（格式：名稱@市集）。</td>
+<td><code>"enabledPlugins": { "code-review@claude-plugins-official": true }</code></td>
+</tr>
+<tr>
+<td><code>extraKnownMarketplaces</code></td>
+<td>任何設定檔</td>
+<td>為此 repo 或組織註冊額外的 plugin 市集。</td>
+<td><code>"extraKnownMarketplaces": { "acme": { "source": { "source": "github", "repo": "acme/claude-plugins" } } }</code><br><sub>格式示意</sub></td>
+</tr>
+<tr>
+<td><code>pluginConfigs</code></td>
+<td>使用者／組織</td>
+<td>plugin 設定對話框的已存答案（也用來設定內建 AGENTS.md 讀取方式）。</td>
+<td><code>"pluginConfigs": { "cc-plugin-agents-md@builtin": { "options": { "instructionFiles": "claude-md-and-agents-md" } } }</code></td>
+</tr>
+<tr>
+<td><code>prependPlugins</code></td>
+<td>使用者／組織</td>
+<td>組織的 mods 在每個使用者安裝的 mod 之前執行。</td>
+<td><code>"prependPlugins": ["guard@acme"]</code><br><sub>格式示意</sub></td>
+</tr>
+<tr>
+<td><code>appendPlugins</code></td>
+<td>使用者／組織</td>
+<td>組織的 mods 在每個使用者安裝的 mod 之後執行。</td>
+<td><code>"appendPlugins": ["audit@acme"]</code><br><sub>格式示意</sub></td>
+</tr>
+<tr>
+<td><code>strictKnownMarketplaces</code></td>
+<td>僅組織管理</td>
+<td>只允許這些市集來源。</td>
+<td><code>"strictKnownMarketplaces": [ { "source": "github", "repo": "acme/claude-plugins" } ]</code><br><sub>格式示意</sub></td>
+</tr>
+<tr>
+<td><code>blockedMarketplaces</code></td>
+<td>僅組織管理</td>
+<td>封鎖特定市集來源。</td>
+<td><code>"blockedMarketplaces": [ { "source": "github", "repo": "someone/untrusted" } ]</code><br><sub>格式示意</sub></td>
+</tr>
+<tr>
+<td><code>disableCommandPluginSources</code></td>
+<td>僅組織管理</td>
+<td>封鎖「執行指令來安裝」的 plugin 來源。</td>
+<td><code>"disableCommandPluginSources": true</code></td>
+</tr>
+<tr>
+<td><code>pluginSuggestionMarketplaces</code></td>
+<td>僅組織管理</td>
+<td>哪些市集的 plugin 可以出現在情境推薦中。</td>
+<td><code>"pluginSuggestionMarketplaces": ["acme"]</code></td>
+</tr>
+<tr>
+<td><code>pluginTrustMessage</code></td>
+<td>僅組織管理</td>
+<td>在 plugin 信任警告中附加公司自訂說明。</td>
+<td><code>"pluginTrustMessage": "請只安裝 IT 審核過的 plugin。"</code></td>
+</tr>
+<tr>
+<td><code>strictPluginOnlyCustomization</code></td>
+<td>僅組織管理</td>
+<td>skills、agents、hooks、MCP 只能來自 plugin 與組織，擋掉個人／專案來源。</td>
+<td><code>"strictPluginOnlyCustomization": true</code></td>
+</tr>
+<tr>
+<td><code>strictPluginOnlyCustomization.agents</code></td>
+<td>僅組織管理</td>
+<td>只鎖 subagents。</td>
+<td><code>"strictPluginOnlyCustomization": { "agents": true }</code></td>
+</tr>
+<tr>
+<td><code>strictPluginOnlyCustomization.hooks</code></td>
+<td>僅組織管理</td>
+<td>只鎖 hooks。</td>
+<td><code>"strictPluginOnlyCustomization": { "hooks": true }</code></td>
+</tr>
+<tr>
+<td><code>strictPluginOnlyCustomization.mcp</code></td>
+<td>僅組織管理</td>
+<td>只鎖 MCP 伺服器。</td>
+<td><code>"strictPluginOnlyCustomization": { "mcp": true }</code></td>
+</tr>
+<tr>
+<td><code>strictPluginOnlyCustomization.skills</code></td>
+<td>僅組織管理</td>
+<td>只鎖 skills。</td>
+<td><code>"strictPluginOnlyCustomization": { "skills": true }</code></td>
+</tr>
+<tr>
+<td><code>disableSideloadFlags</code></td>
+<td>僅組織管理</td>
+<td>拒絕 --plugin-dir、--agents、--mcp-config 等側載旗標。</td>
+<td><code>"disableSideloadFlags": true</code></td>
+</tr>
+</tbody>
+</table>
+<p><a id="cat-mcp"></a></p>
+<h3>🔌 MCP 外部工具</h3>
+<p>管理 Claude 能連到哪些外部工具伺服器。</p>
+<table>
+<thead>
+<tr>
+<th>設定 key</th>
+<th>範圍</th>
+<th>說明</th>
+<th>範例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>enableAllProjectMcpServers</code></td>
+<td>任何設定檔</td>
+<td>自動核准專案 .mcp.json 中所有伺服器，不再逐一詢問。</td>
+<td><code>"enableAllProjectMcpServers": true</code></td>
+</tr>
+<tr>
+<td><code>enabledMcpjsonServers</code></td>
+<td>任何設定檔</td>
+<td>核准專案 .mcp.json 中指定的伺服器。</td>
+<td><code>"enabledMcpjsonServers": ["github", "sentry"]</code></td>
+</tr>
+<tr>
+<td><code>disabledMcpjsonServers</code></td>
+<td>任何設定檔</td>
+<td>拒絕專案 .mcp.json 中指定的伺服器。</td>
+<td><code>"disabledMcpjsonServers": ["experimental-db"]</code></td>
+</tr>
+<tr>
+<td><code>allowedMcpServers</code></td>
+<td>任何設定檔</td>
+<td>允許使用者加入的 MCP 伺服器白名單。</td>
+<td><code>"allowedMcpServers": [ { "serverName": "github" } ]</code><br><sub>格式示意</sub></td>
+</tr>
+<tr>
+<td><code>deniedMcpServers</code></td>
+<td>任何設定檔</td>
+<td>依名稱、網址或指令封鎖 MCP 伺服器（優先於白名單）。</td>
+<td><code>"deniedMcpServers": [ { "serverName": "filesystem" } ]</code><br><sub>格式示意</sub></td>
+</tr>
+<tr>
+<td><code>allowManagedMcpServersOnly</code></td>
+<td>僅組織管理</td>
+<td>白名單只採用組織設定。</td>
+<td><code>"allowManagedMcpServersOnly": true</code></td>
+</tr>
+<tr>
+<td><code>managedMcpServers</code></td>
+<td>僅組織管理</td>
+<td>組織提供給每位使用者的遠端 MCP 伺服器。</td>
+<td><code>"managedMcpServers": { "jira": { "type": "http", "url": "https://mcp.acme.com/jira" } }</code><br><sub>格式示意</sub></td>
+</tr>
+<tr>
+<td><code>allowAllClaudeAiMcps</code></td>
+<td>僅組織管理</td>
+<td>在 managed-mcp.json 鎖定下仍載入 claude.ai connectors。</td>
+<td><code>"allowAllClaudeAiMcps": true</code></td>
+</tr>
+<tr>
+<td><code>disableClaudeAiConnectors</code></td>
+<td>任何設定檔</td>
+<td>停用 claude.ai 上連好的 connectors。</td>
+<td><code>"disableClaudeAiConnectors": true</code></td>
+</tr>
+<tr>
+<td><code>allowClaudeInChromeWithManagedMcp</code></td>
+<td>僅組織管理</td>
+<td>在 managed-mcp.json 鎖定下仍允許 Claude in Chrome。</td>
+<td><code>"allowClaudeInChromeWithManagedMcp": true</code></td>
+</tr>
+<tr>
+<td><code>channelsEnabled</code></td>
+<td>僅組織管理</td>
+<td>允許組織使用 channels（MCP 推送事件進 session）。</td>
+<td><code>"channelsEnabled": true</code></td>
+</tr>
+<tr>
+<td><code>allowedChannelPlugins</code></td>
+<td>僅組織管理</td>
+<td>取代預設的 channel plugin 白名單。</td>
+<td><code>"allowedChannelPlugins": ["ci-notifier@acme"]</code><br><sub>格式示意</sub></td>
+</tr>
+</tbody>
+</table>
+<p><a id="cat-parallel"></a></p>
+<h3>🚀 平行代理、工作流程與 Worktree</h3>
+<p>多個 Claude 同時工作時的行為。</p>
+<table>
+<thead>
+<tr>
+<th>設定 key</th>
+<th>範圍</th>
+<th>說明</th>
+<th>範例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>disableAgentView</code></td>
+<td>任何設定檔</td>
+<td>關閉背景代理與 Agent view（claude agents、--bg、/background）。</td>
+<td><code>"disableAgentView": true</code></td>
+</tr>
+<tr>
+<td><code>defaultToAgentsView</code></td>
+<td>~/.claude.json</td>
+<td>只打 claude 不帶參數時，直接開啟 Agent view。</td>
+<td><code>"defaultToAgentsView": true</code></td>
+</tr>
+<tr>
+<td><code>leftArrowOpensAgents</code></td>
+<td>~/.claude.json</td>
+<td>關閉「空白輸入按 ← 開啟 Agent view」的快捷鍵。</td>
+<td><code>"leftArrowOpensAgents": false</code></td>
+</tr>
+<tr>
+<td><code>crossSessionInbound</code></td>
+<td>任何設定檔</td>
+<td>其他 session 傳來的訊息：accept 直接送達、hold 暫存待你審核、refuse 拒收。</td>
+<td><code>"crossSessionInbound": "hold"</code></td>
+</tr>
+<tr>
+<td><code>isolatePeerMachines</code></td>
+<td>任何設定檔</td>
+<td>要傳訊息給其他電腦上的 session 前先問你。</td>
+<td><code>"isolatePeerMachines": true</code></td>
+</tr>
+<tr>
+<td><code>teammateMode</code></td>
+<td>任何設定檔</td>
+<td>Agent team 隊友的顯示方式：auto、tmux、iterm2、in-process。</td>
+<td><code>"teammateMode": "tmux"</code></td>
+</tr>
+<tr>
+<td><code>enableWorkflows</code></td>
+<td>任何設定檔</td>
+<td>為自己開關動態工作流程（Pro 方案需開啟）。</td>
+<td><code>"enableWorkflows": true</code></td>
+</tr>
+<tr>
+<td><code>disableWorkflows</code></td>
+<td>任何設定檔</td>
+<td>對所有人關閉動態工作流程。</td>
+<td><code>"disableWorkflows": true</code></td>
+</tr>
+<tr>
+<td><code>workflowKeywordTriggerEnabled</code></td>
+<td>任何設定檔</td>
+<td>設 false 讓提示中的 ultracode 字樣不再觸發工作流程。</td>
+<td><code>"workflowKeywordTriggerEnabled": false</code></td>
+</tr>
+<tr>
+<td><code>workflowSizeGuideline</code></td>
+<td>任何設定檔</td>
+<td>工作流程代理數建議：small(&lt;5)、medium(&lt;10)、large(&lt;50)、unrestricted。</td>
+<td><code>"workflowSizeGuideline": "small"</code></td>
+</tr>
+<tr>
+<td><code>worktree</code></td>
+<td>任何設定檔</td>
+<td>git worktree 的建立方式（容器）。</td>
+<td><code>"worktree": { "baseRef": "head" }</code></td>
+</tr>
+<tr>
+<td><code>worktree.baseRef</code></td>
+<td>任何設定檔</td>
+<td>新 worktree 從遠端預設分支（fresh）或本地 HEAD（head）分出。</td>
+<td><code>"worktree": { "baseRef": "head" }</code></td>
+</tr>
+<tr>
+<td><code>worktree.bgIsolation</code></td>
+<td>任何設定檔</td>
+<td>設 none 讓背景 session 直接改工作目錄，不建 worktree。</td>
+<td><code>"worktree": { "bgIsolation": "none" }</code></td>
+</tr>
+<tr>
+<td><code>worktree.sparsePaths</code></td>
+<td>任何設定檔</td>
+<td>每個 worktree 只 checkout 需要的目錄（大型 repo 加速）。</td>
+<td><code>"worktree": { "sparsePaths": ["packages/web", "packages/shared"] }</code></td>
+</tr>
+<tr>
+<td><code>worktree.symlinkDirectories</code></td>
+<td>任何設定檔</td>
+<td>把大型目錄用 symlink 共用到每個 worktree，省空間。</td>
+<td><code>"worktree": { "symlinkDirectories": ["node_modules", ".cache"] }</code></td>
+</tr>
+<tr>
+<td><code>processWrapper</code></td>
+<td>使用者／組織</td>
+<td>（macOS/Linux）背景程序透過公司指定的啟動器執行。</td>
+<td><code>"processWrapper": "/usr/local/bin/corp-launch"</code></td>
+</tr>
+</tbody>
+</table>
+<p><a id="cat-ui"></a></p>
+<h3>🎨 介面與操作體驗</h3>
+<p>外觀、輸入方式、顯示內容。</p>
+<table>
+<thead>
+<tr>
+<th>設定 key</th>
+<th>範圍</th>
+<th>說明</th>
+<th>範例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>theme</code></td>
+<td>任何設定檔</td>
+<td>介面配色：dark、light、auto、色盲友善、ANSI 等。</td>
+<td><code>"theme": "dark"</code></td>
+</tr>
+<tr>
+<td><code>tui</code></td>
+<td>任何設定檔</td>
+<td>終端機渲染器：default（傳統）或 fullscreen（無閃爍全螢幕）。</td>
+<td><code>"tui": "fullscreen"</code></td>
+</tr>
+<tr>
+<td><code>viewMode</code></td>
+<td>任何設定檔</td>
+<td>啟動時的對話檢視：default、verbose（完整工具輸出）、focus（只看重點）。</td>
+<td><code>"viewMode": "focus"</code></td>
+</tr>
+<tr>
+<td><code>verbose</code></td>
+<td>任何設定檔</td>
+<td>顯示完整工具輸出（viewMode 同時設定時以 viewMode 為準）。</td>
+<td><code>"verbose": true</code></td>
+</tr>
+<tr>
+<td><code>editorMode</code></td>
+<td>任何設定檔</td>
+<td>輸入框按鍵模式：normal 或 vim。</td>
+<td><code>"editorMode": "vim"</code></td>
+</tr>
+<tr>
+<td><code>vimInsertModeRemaps</code></td>
+<td>使用者／組織</td>
+<td>Vim 插入模式中把兩個按鍵序列對應成 Esc。</td>
+<td><code>"vimInsertModeRemaps": { "jj": "&lt;Esc&gt;" }</code></td>
+</tr>
+<tr>
+<td><code>defaultShell</code></td>
+<td>任何設定檔</td>
+<td>輸入框 ! 指令使用 bash 或 powershell。</td>
+<td><code>"defaultShell": "powershell"</code></td>
+</tr>
+<tr>
+<td><code>respondToBashCommands</code></td>
+<td>任何設定檔</td>
+<td>設 false 時，! 指令的輸出只加入對話、Claude 不自動回應。</td>
+<td><code>"respondToBashCommands": false</code></td>
+</tr>
+<tr>
+<td><code>promptSuggestionEnabled</code></td>
+<td>任何設定檔</td>
+<td>設 false 隱藏灰色的「下一句建議」。</td>
+<td><code>"promptSuggestionEnabled": false</code></td>
+</tr>
+<tr>
+<td><code>emojiCompletionEnabled</code></td>
+<td>任何設定檔</td>
+<td>設 false 關閉 :shortcode: emoji 建議。</td>
+<td><code>"emojiCompletionEnabled": false</code></td>
+</tr>
+<tr>
+<td><code>spellcheck</code></td>
+<td>使用者／組織</td>
+<td>用已安裝的拼字檢查器在輸入框標示拼錯的字。</td>
+<td><code>"spellcheck": { "enabled": true }</code><br><sub>格式示意</sub></td>
+</tr>
+<tr>
+<td><code>spinnerTipsEnabled</code></td>
+<td>任何設定檔</td>
+<td>工作中 spinner 下方是否顯示小提示。</td>
+<td><code>"spinnerTipsEnabled": false</code></td>
+</tr>
+<tr>
+<td><code>spinnerTipsOverride</code></td>
+<td>任何設定檔</td>
+<td>加入或取代 spinner 提示文字。</td>
+<td><code>"spinnerTipsOverride": { "excludeDefault": true, "tips": ["記得先跑測試再 commit"] }</code></td>
+</tr>
+<tr>
+<td><code>spinnerVerbs</code></td>
+<td>任何設定檔</td>
+<td>加入或取代工作中顯示的動詞（例如 Thinking、Baking）。</td>
+<td><code>"spinnerVerbs": { "mode": "append", "verbs": ["思考中", "敲鍵盤中"] }</code></td>
+</tr>
+<tr>
+<td><code>showTurnDuration</code></td>
+<td>任何設定檔</td>
+<td>回合結束後顯示「Cooked for 1m 20s」耗時。</td>
+<td><code>"showTurnDuration": false</code></td>
+</tr>
+<tr>
+<td><code>terminalProgressBarEnabled</code></td>
+<td>任何設定檔</td>
+<td>在支援的終端機分頁顯示進度條。</td>
+<td><code>"terminalProgressBarEnabled": false</code></td>
+</tr>
+<tr>
+<td><code>terminalTitleFromRename</code></td>
+<td>任何設定檔</td>
+<td>設 false 讓 /rename 不改終端機分頁標題。</td>
+<td><code>"terminalTitleFromRename": false</code></td>
+</tr>
+<tr>
+<td><code>timeFormat</code></td>
+<td>任何設定檔</td>
+<td>時間顯示：auto、12-hour、24-hour、24-hour-utc 或 strftime 樣式。</td>
+<td><code>"timeFormat": "24-hour"</code></td>
+</tr>
+<tr>
+<td><code>timeZone</code></td>
+<td>任何設定檔</td>
+<td>介面顯示時間用的時區（IANA 名稱）。</td>
+<td><code>"timeZone": "Asia/Taipei"</code></td>
+</tr>
+<tr>
+<td><code>prefersReducedMotion</code></td>
+<td>任何設定檔</td>
+<td>減少或關閉動畫（無障礙）。</td>
+<td><code>"prefersReducedMotion": true</code></td>
+</tr>
+<tr>
+<td><code>syntaxHighlightingDisabled</code></td>
+<td>任何設定檔</td>
+<td>關閉 diff 與程式碼區塊的語法上色。</td>
+<td><code>"syntaxHighlightingDisabled": true</code></td>
+</tr>
+<tr>
+<td><code>maxProseWidth</code></td>
+<td>任何設定檔</td>
+<td>寬終端機中，說明文字最多幾欄寬（表格與程式碼不受限）。</td>
+<td><code>"maxProseWidth": 100</code></td>
+</tr>
+<tr>
+<td><code>autoScrollEnabled</code></td>
+<td>任何設定檔</td>
+<td>全螢幕模式下自動捲到最新輸出。</td>
+<td><code>"autoScrollEnabled": false</code></td>
+</tr>
+<tr>
+<td><code>wheelScrollAccelerationEnabled</code></td>
+<td>任何設定檔</td>
+<td>全螢幕模式下滑鼠滾輪加速。</td>
+<td><code>"wheelScrollAccelerationEnabled": false</code></td>
+</tr>
+<tr>
+<td><code>awaySummaryEnabled</code></td>
+<td>任何設定檔</td>
+<td>離開一陣子回來時是否顯示「期間發生了什麼」摘要。</td>
+<td><code>"awaySummaryEnabled": false</code></td>
+</tr>
+<tr>
+<td><code>showClearContextOnPlanAccept</code></td>
+<td>任何設定檔</td>
+<td>核准計畫時多出「清空 context 再執行」選項。</td>
+<td><code>"showClearContextOnPlanAccept": true</code></td>
+</tr>
+<tr>
+<td><code>axScreenReader</code></td>
+<td>任何設定檔</td>
+<td>螢幕閱讀器友善輸出（無邊框、無動畫的線性文字）。</td>
+<td><code>"axScreenReader": true</code></td>
+</tr>
+<tr>
+<td><code>voice</code></td>
+<td>任何設定檔</td>
+<td>語音聽寫：開啟並選擇 hold（按住說話）或 tap（點一下開始/結束）。</td>
+<td><code>"voice": { "enabled": true, "mode": "tap" }</code></td>
+</tr>
+<tr>
+<td><code>voiceEnabled</code></td>
+<td>任何設定檔</td>
+<td>舊版單一開關的語音聽寫設定。</td>
+<td><code>"voiceEnabled": true</code></td>
+</tr>
+<tr>
+<td><code>copyFullResponse</code></td>
+<td>~/.claude.json</td>
+<td>/copy 直接複製整段回覆，不跳選擇器。</td>
+<td><code>"copyFullResponse": true</code></td>
+</tr>
+<tr>
+<td><code>copyOnSelect</code></td>
+<td>~/.claude.json</td>
+<td>設 false 關閉「滑鼠選取即複製」。</td>
+<td><code>"copyOnSelect": false</code></td>
+</tr>
+<tr>
+<td><code>externalEditorContext</code></td>
+<td>~/.claude.json</td>
+<td>Ctrl+G 開外部編輯器時，附上上一則回覆（以註解形式）。</td>
+<td><code>"externalEditorContext": true</code></td>
+</tr>
+<tr>
+<td><code>diffTool</code></td>
+<td>~/.claude.json</td>
+<td>檔案差異在哪裡顯示：auto（有連 IDE 時用 IDE）或 terminal（一律終端機）。</td>
+<td><code>"diffTool": "terminal"</code></td>
+</tr>
+<tr>
+<td><code>prStatusFooterEnabled</code></td>
+<td>~/.claude.json</td>
+<td>設 false 隱藏底部的 PR 審查狀態徽章。</td>
+<td><code>"prStatusFooterEnabled": false</code></td>
+</tr>
+<tr>
+<td><code>prUrlTemplate</code></td>
+<td>任何設定檔</td>
+<td>PR 連結改指向內部審查工具（可用 {owner}{repo}{number} 等變數）。</td>
+<td><code>"prUrlTemplate": "https://reviews.example.com/{owner}/{repo}/pull/{number}"</code></td>
+</tr>
+<tr>
+<td><code>footerLinksRegexes</code></td>
+<td>使用者／組織</td>
+<td>輸出符合正規表示式時，在輸入框下方顯示可點的連結徽章（例如 issue 編號）。</td>
+<td><code>"footerLinksRegexes": [ { "regex": "JIRA-(\\d+)", "url": "https://jira.example.com/browse/JIRA-$1" } ]</code><br><sub>格式示意</sub></td>
+</tr>
+<tr>
+<td><code>companyAnnouncements</code></td>
+<td>任何設定檔</td>
+<td>啟動時顯示公司公告（多則時隨機一則）。</td>
+<td><code>"companyAnnouncements": ["本週五 18:00 停機維護"]</code></td>
+</tr>
+<tr>
+<td><code>feedbackSurveyRate</code></td>
+<td>任何設定檔</td>
+<td>品質問卷出現機率（0～1）。</td>
+<td><code>"feedbackSurveyRate": 0</code></td>
+</tr>
+<tr>
+<td><code>feedbackDrafts</code></td>
+<td>使用者／組織</td>
+<td>Claude 代擬回饋報告的通知方式：notify、quiet、off。</td>
+<td><code>"feedbackDrafts": "off"</code></td>
+</tr>
+</tbody>
+</table>
+<p><a id="cat-remote"></a></p>
+<h3>🔔 通知、遠端與桌面整合</h3>
+<p>通知、手機、遠端控制、IDE 與瀏覽器整合。</p>
+<table>
+<thead>
+<tr>
+<th>設定 key</th>
+<th>範圍</th>
+<th>說明</th>
+<th>範例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>preferredNotifChannel</code></td>
+<td>任何設定檔</td>
+<td>任務完成時的通知方式：auto、terminal_bell、iterm2、kitty、ghostty、notifications_disabled 等。</td>
+<td><code>"preferredNotifChannel": "terminal_bell"</code></td>
+</tr>
+<tr>
+<td><code>agentPushNotifEnabled</code></td>
+<td>任何設定檔</td>
+<td>允許 Claude 主動推播通知到手機。</td>
+<td><code>"agentPushNotifEnabled": true</code></td>
+</tr>
+<tr>
+<td><code>inputNeededNotifEnabled</code></td>
+<td>任何設定檔</td>
+<td>Claude 在等你（權限或問題）時推播到手機。</td>
+<td><code>"inputNeededNotifEnabled": true</code></td>
+</tr>
+<tr>
+<td><code>askUserQuestionTimeout</code></td>
+<td>使用者／組織</td>
+<td>Claude 問你問題時，閒置多久自動用已選答案繼續：60s、5m、10m、never。</td>
+<td><code>"askUserQuestionTimeout": "5m"</code></td>
+</tr>
+<tr>
+<td><code>dialogExpiry</code></td>
+<td>使用者／組織</td>
+<td>轉發到遠端裝置的對話框等多久沒回應就取消：60s、5m、10m、never。</td>
+<td><code>"dialogExpiry": "10m"</code></td>
+</tr>
+<tr>
+<td><code>autoContinueAtUsageLimit</code></td>
+<td>使用者／組織</td>
+<td>碰到 claude.ai 額度上限時，等重置後自動繼續任務。</td>
+<td><code>"autoContinueAtUsageLimit": true</code></td>
+</tr>
+<tr>
+<td><code>remoteControlAtStartup</code></td>
+<td>任何設定檔</td>
+<td>每個 session 啟動就自動開啟 Remote Control。</td>
+<td><code>"remoteControlAtStartup": true</code></td>
+</tr>
+<tr>
+<td><code>disableRemoteControl</code></td>
+<td>任何設定檔</td>
+<td>全面停用 Remote Control。</td>
+<td><code>"disableRemoteControl": true</code></td>
+</tr>
+<tr>
+<td><code>remote.defaultEnvironmentId</code></td>
+<td>任何設定檔</td>
+<td>claude --cloud 預設使用的雲端環境。</td>
+<td><code>"remote": { "defaultEnvironmentId": "env_abc123" }</code></td>
+</tr>
+<tr>
+<td><code>enableArtifact</code></td>
+<td>任何設定檔</td>
+<td>設 false 關閉 Artifact（可分享網頁成品）工具。</td>
+<td><code>"enableArtifact": false</code></td>
+</tr>
+<tr>
+<td><code>disableDeepLinkRegistration</code></td>
+<td>任何設定檔</td>
+<td>不註冊 claude-cli:// 連結處理程式。</td>
+<td><code>"disableDeepLinkRegistration": true</code></td>
+</tr>
+<tr>
+<td><code>claudeInChromeDefaultEnabled</code></td>
+<td>~/.claude.json</td>
+<td>每個 session 預設啟用 Chrome 整合。</td>
+<td><code>"claudeInChromeDefaultEnabled": true</code></td>
+</tr>
+<tr>
+<td><code>autoConnectIde</code></td>
+<td>~/.claude.json</td>
+<td>在外部終端機啟動時自動連到執行中的 VS Code / JetBrains。</td>
+<td><code>"autoConnectIde": true</code></td>
+</tr>
+<tr>
+<td><code>autoInstallIdeExtension</code></td>
+<td>~/.claude.json</td>
+<td>設 false 停止從 VS Code 終端機自動安裝擴充。</td>
+<td><code>"autoInstallIdeExtension": false</code></td>
+</tr>
+<tr>
+<td><code>sshConfigs</code></td>
+<td>使用者／組織</td>
+<td>在桌面版環境下拉選單中加入 SSH 連線。</td>
+<td><code>"sshConfigs": [ { "id": "dev", "name": "開發機", "sshHost": "me@dev.example.com" } ]</code><br><sub>格式示意</sub></td>
+</tr>
+<tr>
+<td><code>sshHostAllowlist</code></td>
+<td>僅組織管理</td>
+<td>限制桌面版 SSH session 可連的主機。</td>
+<td><code>"sshHostAllowlist": ["*.corp.example.com"]</code><br><sub>格式示意</sub></td>
+</tr>
+<tr>
+<td><code>disableDesktopLocalSessions</code></td>
+<td>僅組織管理</td>
+<td>關閉桌面版的本機 Code session。</td>
+<td><code>"disableDesktopLocalSessions": true</code></td>
+</tr>
+<tr>
+<td><code>disableMobileSimulatorTools</code></td>
+<td>僅組織管理</td>
+<td>禁止 Claude 操作 iOS 模擬器面板。</td>
+<td><code>"disableMobileSimulatorTools": true</code></td>
+</tr>
+<tr>
+<td><code>browserExternalPageTools</code></td>
+<td>僅組織管理</td>
+<td>桌面內建瀏覽器中，不讓 Claude 的工具作用在外部網頁。</td>
+<td><code>"browserExternalPageTools": false</code></td>
+</tr>
+<tr>
+<td><code>disableBrowserExternalNavigation</code></td>
+<td>僅組織管理</td>
+<td>桌面內建瀏覽器只能開 localhost。</td>
+<td><code>"disableBrowserExternalNavigation": true</code></td>
+</tr>
+</tbody>
+</table>
+<p><a id="cat-env"></a></p>
+<h3>🔑 環境、驗證與更新</h3>
+<p>環境變數、登入方式、憑證腳本、版本控管。</p>
+<table>
+<thead>
+<tr>
+<th>設定 key</th>
+<th>範圍</th>
+<th>說明</th>
+<th>範例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>env</code></td>
+<td>任何設定檔</td>
+<td>每個 session 與子程序都會帶上的環境變數。</td>
+<td><code>"env": { "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet", "NODE_ENV": "development" }</code></td>
+</tr>
+<tr>
+<td><code>apiKeyHelper</code></td>
+<td>任何設定檔</td>
+<td>執行腳本動態產生 API 憑證（例如從密碼管理器取）。</td>
+<td><code>"apiKeyHelper": "~/.claude/get-key.sh"</code></td>
+</tr>
+<tr>
+<td><code>awsAuthRefresh</code></td>
+<td>任何設定檔</td>
+<td>Bedrock 憑證過期時執行的刷新指令。</td>
+<td><code>"awsAuthRefresh": "aws sso login --profile dev"</code></td>
+</tr>
+<tr>
+<td><code>awsCredentialExport</code></td>
+<td>任何設定檔</td>
+<td>以 JSON 輸出 Bedrock 憑證的指令。</td>
+<td><code>"awsCredentialExport": "~/.claude/aws-creds.sh"</code></td>
+</tr>
+<tr>
+<td><code>gcpAuthRefresh</code></td>
+<td>任何設定檔</td>
+<td>刷新 Google Cloud 憑證的指令。</td>
+<td><code>"gcpAuthRefresh": "gcloud auth application-default login"</code></td>
+</tr>
+<tr>
+<td><code>otelHeadersHelper</code></td>
+<td>任何設定檔</td>
+<td>產生輪替 OpenTelemetry header 的指令。</td>
+<td><code>"otelHeadersHelper": "~/.claude/otel-headers.sh"</code></td>
+</tr>
+<tr>
+<td><code>forceLoginMethod</code></td>
+<td>任何設定檔</td>
+<td>限制登入方式：claudeai、console、gateway。</td>
+<td><code>"forceLoginMethod": "claudeai"</code></td>
+</tr>
+<tr>
+<td><code>forceLoginOrgUUID</code></td>
+<td>任何設定檔</td>
+<td>只允許登入指定組織的帳號。</td>
+<td><code>"forceLoginOrgUUID": "123e4567-e89b-12d3-a456-426614174000"</code></td>
+</tr>
+<tr>
+<td><code>forceLoginGatewayUrl</code></td>
+<td>僅組織管理</td>
+<td>登入畫面要連的公司閘道網址。</td>
+<td><code>"forceLoginGatewayUrl": "https://claude-gw.acme.com"</code></td>
+</tr>
+<tr>
+<td><code>gatewayInternalNetworks</code></td>
+<td>僅組織管理</td>
+<td>讓 /login 能連到位於公司內網公有 IP 段的閘道。</td>
+<td><code>"gatewayInternalNetworks": ["203.0.113.0/24"]</code></td>
+</tr>
+<tr>
+<td><code>allowedProviders</code></td>
+<td>僅組織管理</td>
+<td>限制這台機器可用的 API 供應商。</td>
+<td><code>"allowedProviders": ["anthropic", "bedrock"]</code></td>
+</tr>
+<tr>
+<td><code>skipWebFetchPreflight</code></td>
+<td>任何設定檔</td>
+<td>連不到 Anthropic 時跳過 WebFetch 的網域預檢。</td>
+<td><code>"skipWebFetchPreflight": true</code></td>
+</tr>
+<tr>
+<td><code>autoUpdatesChannel</code></td>
+<td>任何設定檔</td>
+<td>自動更新頻道：latest（最新）或 stable（約晚一週、較穩）。</td>
+<td><code>"autoUpdatesChannel": "stable"</code></td>
+</tr>
+<tr>
+<td><code>minimumVersion</code></td>
+<td>任何設定檔</td>
+<td>自動更新不會裝到比這更舊的版本。</td>
+<td><code>"minimumVersion": "2.1.300"</code></td>
+</tr>
+<tr>
+<td><code>requiredMinimumVersion</code></td>
+<td>僅組織管理</td>
+<td>低於此版本就拒絕啟動。</td>
+<td><code>"requiredMinimumVersion": "2.1.300"</code></td>
+</tr>
+<tr>
+<td><code>requiredMaximumVersion</code></td>
+<td>僅組織管理</td>
+<td>高於此版本就拒絕啟動。</td>
+<td><code>"requiredMaximumVersion": "2.1.312"</code></td>
+</tr>
+</tbody>
+</table>
+<p><a id="cat-managed"></a></p>
+<h3>🏢 組織管理專用</h3>
+<p>給 IT／管理員部署政策用，一般使用者不需要設定。</p>
+<table>
+<thead>
+<tr>
+<th>設定 key</th>
+<th>範圍</th>
+<th>說明</th>
+<th>範例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>managedSourcesBehavior</code></td>
+<td>僅組織管理</td>
+<td>多個管理來源時：first-wins（只用最高優先的）或 merge（合併）。</td>
+<td><code>"managedSourcesBehavior": "merge"</code></td>
+</tr>
+<tr>
+<td><code>parentSettingsBehavior</code></td>
+<td>僅組織管理</td>
+<td>SDK 或 IDE 宿主傳入的限制要合併還是捨棄。</td>
+<td><code>"parentSettingsBehavior": "merge"</code></td>
+</tr>
+<tr>
+<td><code>policyHelper</code></td>
+<td>僅組織管理</td>
+<td>啟動時執行程式來計算管理設定。</td>
+<td><code>"policyHelper": { "path": "/usr/local/bin/claude-policy", "timeoutMs": 5000 }</code><br><sub>格式示意</sub></td>
+</tr>
+<tr>
+<td><code>policyHelper.path</code></td>
+<td>僅組織管理</td>
+<td>policy helper 執行檔路徑。</td>
+<td><code>"policyHelper": { "path": "/usr/local/bin/claude-policy" }</code></td>
+</tr>
+<tr>
+<td><code>policyHelper.refreshIntervalMs</code></td>
+<td>僅組織管理</td>
+<td>背景重新執行 helper 的間隔（毫秒）。</td>
+<td><code>"policyHelper": { "refreshIntervalMs": 3600000 }</code></td>
+</tr>
+<tr>
+<td><code>policyHelper.timeoutMs</code></td>
+<td>僅組織管理</td>
+<td>等待 helper 的上限（毫秒）。</td>
+<td><code>"policyHelper": { "timeoutMs": 5000 }</code></td>
+</tr>
+<tr>
+<td><code>forceRemoteSettingsRefresh</code></td>
+<td>僅組織管理</td>
+<td>啟動前必須成功取得伺服器下發的設定，否則不啟動。</td>
+<td><code>"forceRemoteSettingsRefresh": true</code></td>
+</tr>
+<tr>
+<td><code>wslInheritsWindowsSettings</code></td>
+<td>僅組織管理</td>
+<td>讓 WSL 讀取 Windows 端的管理政策。</td>
+<td><code>"wslInheritsWindowsSettings": true</code></td>
+</tr>
+</tbody>
+</table>
+<p><a id="cat-deprecated"></a></p>
+<h3>🗄️ 已棄用（看到舊教學時參考）</h3>
+<p>這些 key 已不建議或不再有效。</p>
+<table>
+<thead>
+<tr>
+<th>設定 key</th>
+<th>範圍</th>
+<th>說明</th>
+<th>範例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>includeCoAuthoredBy</code></td>
+<td>任何設定檔</td>
+<td>已棄用，改用 attribution。</td>
+<td><code>"attribution": { "commit": "" }</code></td>
+</tr>
+<tr>
+<td><code>disableArtifact</code></td>
+<td>任何設定檔</td>
+<td>已棄用，改用 enableArtifact: false。</td>
+<td><code>"enableArtifact": false</code></td>
+</tr>
+<tr>
+<td><code>keybindingFlavor</code></td>
+<td>任何設定檔</td>
+<td>已無作用（文字編輯鍵一律 readline 風格）。</td>
+<td>（不需設定）</td>
+</tr>
+<tr>
+<td><code>permissionExplainerEnabled</code></td>
+<td>~/.claude.json</td>
+<td>v2.1.257 移除。</td>
+<td>（不需設定）</td>
+</tr>
+<tr>
+<td><code>taskOutputMaxChars</code></td>
+<td>任何設定檔</td>
+<td>v2.1.277 移除。</td>
+<td>（不需設定）</td>
+</tr>
+<tr>
+<td><code>teammateDefaultModel</code></td>
+<td>~/.claude.json</td>
+<td>v2.1.234 移除。</td>
+<td>（不需設定）</td>
+</tr>
+</tbody>
+</table>
+<h2>8.7 一份完整的範例設定檔</h2>
+<pre><code class="language-json">{
+  &quot;$schema&quot;: &quot;https://json.schemastore.org/claude-code-settings.json&quot;,
+  &quot;model&quot;: &quot;opus&quot;,
+  &quot;effortLevel&quot;: &quot;high&quot;,
+  &quot;language&quot;: &quot;繁體中文&quot;,
+  &quot;outputStyle&quot;: &quot;Explanatory&quot;,
+  &quot;theme&quot;: &quot;dark&quot;,
+  &quot;timeFormat&quot;: &quot;24-hour&quot;,
+  &quot;autoUpdatesChannel&quot;: &quot;stable&quot;,
+  &quot;permissions&quot;: {
+    &quot;defaultMode&quot;: &quot;acceptEdits&quot;,
+    &quot;allow&quot;: [&quot;Bash(npm run test *)&quot;, &quot;Bash(git diff *)&quot;, &quot;Bash(git status)&quot;],
+    &quot;ask&quot;: [&quot;Bash(git push *)&quot;],
+    &quot;deny&quot;: [&quot;Read(./.env)&quot;, &quot;Read(./.env.*)&quot;]
+  },
+  &quot;sandbox&quot;: {
+    &quot;enabled&quot;: true,
+    &quot;filesystem&quot;: { &quot;denyRead&quot;: [&quot;~/.ssh&quot;] },
+    &quot;network&quot;: { &quot;allowedDomains&quot;: [&quot;github.com&quot;, &quot;*.npmjs.org&quot;] }
+  },
+  &quot;statusLine&quot;: { &quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;~/.claude/statusline.sh&quot; },
+  &quot;env&quot;: { &quot;CLAUDE_CODE_SUBAGENT_MODEL&quot;: &quot;sonnet&quot; },
+  &quot;cleanupPeriodDays&quot;: 60
+}
+</code></pre></section>
+<section id="ch-09" data-title="第 9 章　權限、Auto mode 與沙盒"><h1>第 9 章　權限、Auto mode 與沙盒</h1>
+<blockquote>
+<p>Claude Code 能改檔、跑指令，所以「它可以做什麼、什麼要先問、什麼絕對不行」是最重要的安全設定。</p>
+</blockquote>
+<h2>9.1 六種權限模式</h2>
+<table>
+<thead>
+<tr>
+<th>模式（設定值）</th>
+<th>畫面顯示</th>
+<th>不用問就能做</th>
+<th>什麼時候用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual（<code>default</code>／<code>manual</code>）</td>
+<td><code>⏸ manual mode on</code></td>
+<td>只有讀取</td>
+<td>第一次用、重要專案、想逐步審核</td>
+</tr>
+<tr>
+<td>Accept edits（<code>acceptEdits</code>）</td>
+<td><code>⏵⏵ accept edits on</code></td>
+<td>讀取、改檔、工作目錄內常見檔案指令（mkdir、mv、cp、rm…）</td>
+<td>信任方向，想加快但仍想審核指令</td>
+</tr>
+<tr>
+<td>Plan（<code>plan</code>）</td>
+<td><code>⏸ plan mode on</code></td>
+<td>讀取與安全的查詢指令；<strong>核准計畫前不能改檔</strong></td>
+<td>大改動前先討論方案</td>
+</tr>
+<tr>
+<td>Auto（<code>auto</code>）</td>
+<td><code>⏵⏵ auto mode on</code></td>
+<td>全部，但每個動作先經分類器審查</td>
+<td>互動模式的預設；日常使用</td>
+</tr>
+<tr>
+<td>Don't ask（<code>dontAsk</code>）</td>
+<td><code>⏵⏵ don't ask on</code></td>
+<td>只有讀取與事先核准的工具，其他直接拒絕</td>
+<td>自動化腳本、CI</td>
+</tr>
+<tr>
+<td>Bypass（<code>bypassPermissions</code>）</td>
+<td><code>⏵⏵ bypass permissions on</code></td>
+<td>幾乎全部，完全不問</td>
+<td><strong>只在隔離的容器／虛擬機中使用</strong></td>
+</tr>
+</tbody>
+</table>
+<p>切換方式：</p>
+<ul>
+<li>互動中按 <kbd>Shift+Tab</kbd>（桌面版用模式選擇器或 Ctrl/Cmd+Shift+M）。</li>
+<li>啟動時指定：<code>claude --permission-mode plan</code>。</li>
+<li>設為預設：<code>"permissions": { "defaultMode": "acceptEdits" }</code>（<code>auto</code> 與 <code>bypassPermissions</code> 不能寫在專案設定檔，避免別人替你開大門）。</li>
+</ul>
+<p><figure><img loading="lazy" alt="Manual" src="images/06-mode-manual.png"><figcaption>Manual</figcaption></figure>
+<figure><img loading="lazy" alt="Accept edits" src="images/06-mode-acceptedits.png"><figcaption>Accept edits</figcaption></figure>
+<figure><img loading="lazy" alt="Plan" src="images/06-mode-plan.png"><figcaption>Plan</figcaption></figure>
+<figure><img loading="lazy" alt="Auto" src="images/06-mode-auto.png"><figcaption>Auto</figcaption></figure></p>
+<blockquote>
+<p>🔒 <strong>兩條永遠成立的規則</strong>：① deny（禁止）規則在任何模式都有效，包括 bypass。② 寫入 <code>.git</code>、<code>.claude</code>、<code>.bashrc</code> 等受保護路徑，除 bypass 外都不會自動核准。</p>
+</blockquote>
+<h2>9.2 權限詢問框怎麼回答</h2>
+<p>修改檔案時：</p>
+<p><figure><img loading="lazy" alt="改檔詢問" src="images/43-edit-permission.png"><figcaption>改檔詢問</figcaption></figure></p>
+<p>執行指令時：</p>
+<p><figure><img loading="lazy" alt="指令詢問" src="images/45-bash-permission.png"><figcaption>指令詢問</figcaption></figure></p>
+<table>
+<thead>
+<tr>
+<th>選項</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Yes</td>
+<td>只允許這次</td>
+</tr>
+<tr>
+<td>Yes, and don't ask again for: <code>npm test *</code></td>
+<td>記住規則（寫入 <code>.claude/settings.local.json</code>），以後同類指令不再問</td>
+</tr>
+<tr>
+<td>Yes, and switch to accept edits／auto mode</td>
+<td>本 session 切換到較寬鬆的模式</td>
+</tr>
+<tr>
+<td>No</td>
+<td>拒絕；接著告訴 Claude 你希望怎麼做</td>
+</tr>
+<tr>
+<td><kbd>Tab</kbd></td>
+<td>回答的同時附上補充說明（例：「可以，但只改這個函式」）</td>
+</tr>
+</tbody>
+</table>
+<h2>9.3 Auto mode 深入了解</h2>
+<p>Auto mode 用一個<strong>獨立的安全分類器模型</strong>，在每個動作執行前審查。它只看你的要求與 Claude 打算做的動作，看不到檔案或網頁內容，因此惡意網頁中的「指令」騙不了它。</p>
+<table>
+<thead>
+<tr>
+<th>預設會擋下</th>
+<th>預設允許</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl … | bash</code> 下載後執行</td>
+<td>工作目錄內的檔案操作</td>
+</tr>
+<tr>
+<td>把敏感資料送到外部</td>
+<td>依 lock 檔安裝相依套件</td>
+</tr>
+<tr>
+<td>正式環境部署、資料庫 migration</td>
+<td>讀 <code>.env</code> 並送給對應的 API</td>
+</tr>
+<tr>
+<td><code>git push --force</code>、<code>git reset --hard</code></td>
+<td>唯讀的網路請求</td>
+</tr>
+<tr>
+<td><code>terraform destroy</code> 之類的破壞操作</td>
+<td>推送到目前 repo 的一般分支</td>
+</tr>
+<tr>
+<td>合併未核准的 PR、提交秘密資訊</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>連續被擋 3 次或累計 20 次，會暫停 Auto mode 改回詢問。</li>
+<li>被擋的動作會出現在 <code>/permissions</code> 的 <strong>Recently denied</strong>，可以手動重試。</li>
+<li>你在對話中說「不要 push」，分類器也會當成限制。</li>
+<li>用 <code>/auto-mode-setup</code> 讓它認識你的環境（例如哪台是測試機）。</li>
+<li><code>claude auto-mode defaults</code> 可看內建規則。</li>
+</ul>
+<blockquote>
+<p>⚠️ Auto mode 能大幅減少打擾，但不保證 100% 安全。敏感操作請搭配 deny 規則、hooks、沙盒。</p>
+</blockquote>
+<h2>9.4 自訂規則：allow／ask／deny</h2>
+<p>用 <code>/permissions</code> 管理，或寫進設定檔：</p>
+<p><figure><img loading="lazy" alt="/permissions" src="images/24-permissions.png"><figcaption>/permissions</figcaption></figure></p>
+<pre><code class="language-json">{
+  &quot;permissions&quot;: {
+    &quot;allow&quot;: [
+      &quot;Bash(npm run lint)&quot;,
+      &quot;Bash(npm run test *)&quot;,
+      &quot;Bash(git status)&quot;,
+      &quot;Bash(git diff *)&quot;,
+      &quot;WebFetch(domain:github.com)&quot;
+    ],
+    &quot;ask&quot;: [&quot;Bash(git push *)&quot;],
+    &quot;deny&quot;: [
+      &quot;Read(./.env)&quot;,
+      &quot;Read(./.env.*)&quot;,
+      &quot;Read(./secrets/**)&quot;,
+      &quot;Bash(rm -rf *)&quot;
+    ]
+  }
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>規則寫法</th>
+<th>意思</th>
+<th>範例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Bash(指令)</code></td>
+<td>完全符合的指令</td>
+<td><code>Bash(npm run build)</code></td>
+</tr>
+<tr>
+<td><code>Bash(開頭 *)</code></td>
+<td>以此開頭的指令</td>
+<td><code>Bash(git log *)</code></td>
+</tr>
+<tr>
+<td><code>Read(路徑)</code>／<code>Edit(路徑)</code></td>
+<td>讀取／修改檔案，支援 <code>**</code></td>
+<td><code>Edit(src/**)</code></td>
+</tr>
+<tr>
+<td><code>WebFetch(domain:網域)</code></td>
+<td>可抓取的網站</td>
+<td><code>WebFetch(domain:docs.python.org)</code></td>
+</tr>
+<tr>
+<td><code>mcp__伺服器</code> 或 <code>mcp__伺服器__工具</code></td>
+<td>MCP 工具</td>
+<td><code>mcp__github__create_issue</code></td>
+</tr>
+<tr>
+<td><code>Agent(名稱)</code></td>
+<td>某個子代理</td>
+<td><code>Agent(Explore)</code></td>
+</tr>
+<tr>
+<td><code>工具(參數:值)</code></td>
+<td>依參數比對</td>
+<td><code>Agent(model:opus)</code></td>
+</tr>
+</tbody>
+</table>
+<p>路徑寫法：<code>./</code> 相對專案、<code>~/</code> 家目錄、<code>//</code> 絕對路徑。判斷順序：<strong>deny 優先於 ask，ask 優先於 allow</strong>。</p>
+<blockquote>
+<p>💡 懶得自己寫？<code>/fewer-permission-prompts</code> 會分析你最近的紀錄，自動建議白名單。</p>
+</blockquote>
+<h2>9.5 沙盒（Sandbox）</h2>
+<p>沙盒由作業系統強制限制 Claude 執行的指令能碰到哪些檔案與網路。macOS 用 Seatbelt，Linux 與 WSL2 用 bubblewrap；原生 Windows 不支援。</p>
+<p>開啟：輸入 <code>/sandbox</code>，或設定 <code>"sandbox": { "enabled": true }</code>。<code>/sandbox</code> 會先檢查相依套件：</p>
+<p><figure><img loading="lazy" alt="/sandbox 相依檢查" src="images/35-sandbox.png"><figcaption>/sandbox 相依檢查</figcaption></figure></p>
+<p>（Linux 需要 <code>bubblewrap</code> 與 <code>socat</code>，畫面會告訴你怎麼裝。）</p>
+<table>
+<thead>
+<tr>
+<th>面向</th>
+<th>預設</th>
+<th>調整用的設定</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>寫入</td>
+<td>只能寫工作目錄與暫存資料夾</td>
+<td><code>filesystem.allowWrite</code>／<code>denyWrite</code></td>
+</tr>
+<tr>
+<td>讀取</td>
+<td>大部分可讀（<strong>包括 ~/.ssh</strong>，建議封鎖）</td>
+<td><code>filesystem.denyRead</code>／<code>allowRead</code></td>
+</tr>
+<tr>
+<td>網路</td>
+<td>經本機 proxy，允許清單預設是空的</td>
+<td><code>network.allowedDomains</code>／<code>deniedDomains</code></td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-json">{
+  &quot;sandbox&quot;: {
+    &quot;enabled&quot;: true,
+    &quot;filesystem&quot;: { &quot;denyRead&quot;: [&quot;~/.ssh&quot;, &quot;~/.aws&quot;] },
+    &quot;network&quot;: { &quot;allowedDomains&quot;: [&quot;github.com&quot;, &quot;*.npmjs.org&quot;, &quot;pypi.org&quot;] },
+    &quot;excludedCommands&quot;: [&quot;docker compose *&quot;]
+  }
+}
+</code></pre>
+<p>沙盒內執行的指令會自動核准（不再一直問），因為作業系統已經擋住了危險範圍。注意沙盒只管 shell 指令，Claude 的讀寫檔工具、MCP、hooks 不在沙盒內。</p>
+<h2>9.6 推薦的安全組合</h2>
+<table>
+<thead>
+<tr>
+<th>使用情境</th>
+<th>建議</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>新手、重要專案</td>
+<td>Manual 或 Auto + deny 秘密檔案</td>
+</tr>
+<tr>
+<td>日常開發</td>
+<td>Auto + 常用指令 allow + deny <code>.env</code></td>
+</tr>
+<tr>
+<td>想幾乎零打擾</td>
+<td>沙盒（auto-allow）+ 精確 allow 規則</td>
+</tr>
+<tr>
+<td>CI／腳本</td>
+<td><code>dontAsk</code> + <code>--allowedTools</code> 白名單</td>
+</tr>
+<tr>
+<td>完全放手</td>
+<td>只在 Docker／VM 中用 <code>--dangerously-skip-permissions</code></td>
+</tr>
+</tbody>
+</table></section>
+<section id="ch-10" data-title="第 10 章　模型、推理強度、Fast mode 與 Context 管理"><h1>第 10 章　模型、推理強度、Fast mode 與 Context 管理</h1>
+<h2>10.1 選哪個模型？</h2>
+<p><figure><img loading="lazy" alt="/model 選單" src="images/17-model.png"><figcaption>/model 選單</figcaption></figure></p>
+<table>
+<thead>
+<tr>
+<th>選項</th>
+<th>模型（2026/10）</th>
+<th>特色</th>
+<th>價格（每百萬 token 輸入／輸出）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Default（推薦）</td>
+<td>目前為 Opus 5.5</td>
+<td>帳號預設</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Opus</td>
+<td>Opus 5.5</td>
+<td>日常與複雜任務的最佳平衡</td>
+<td>$4／$20</td>
+</tr>
+<tr>
+<td>Fable</td>
+<td>Fable 5.1</td>
+<td>最強，適合最難、最長的任務（需有權限）</td>
+<td>$10／$50</td>
+</tr>
+<tr>
+<td>Sonnet</td>
+<td>Sonnet 5.5</td>
+<td>例行任務、快、便宜</td>
+<td>$2／$10</td>
+</tr>
+<tr>
+<td>Haiku</td>
+<td>Haiku 5.5</td>
+<td>最快最便宜，適合簡單問答</td>
+<td>$0.10／$0.50（超過 10 萬 token 的提示較貴）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>訂閱方案使用者不是按 token 付費，而是消耗方案額度；越強的模型消耗越快。</p>
+</blockquote>
+<p><strong>切換方式</strong>（優先順序由高到低）：</p>
+<ol>
+<li>session 中 <code>/model sonnet</code>（選單中按 <kbd>s</kbd> 只用於本次）</li>
+<li>啟動時 <code>claude --model sonnet</code></li>
+<li>環境變數 <code>ANTHROPIC_MODEL=sonnet</code></li>
+<li>設定檔 <code>"model": "sonnet"</code></li>
+</ol>
+<p><strong>特殊別名</strong>：<code>opusplan</code> 在 Plan 模式用 Opus 想、執行時用 Sonnet 做，省額度；<code>best</code> 有 Fable 就用 Fable，否則用 Opus。</p>
+<h2>10.2 推理強度（Effort）</h2>
+<p><figure><img loading="lazy" alt="/effort 滑桿" src="images/23-effort.png"><figcaption>/effort 滑桿</figcaption></figure></p>
+<table>
+<thead>
+<tr>
+<th>等級</th>
+<th>適合</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>low</td>
+<td>改錯字、格式化、簡單問題（最快、最省）</td>
+</tr>
+<tr>
+<td>medium</td>
+<td>一般開發（Opus／Sonnet／Haiku 5.5 的預設）</td>
+</tr>
+<tr>
+<td>high</td>
+<td>較難的除錯、跨多檔修改</td>
+</tr>
+<tr>
+<td>xhigh</td>
+<td>架構設計、困難演算法</td>
+</tr>
+<tr>
+<td>max</td>
+<td>最難的問題（只對本次 session 有效）</td>
+</tr>
+</tbody>
+</table>
+<pre><code>/effort high          直接設定
+/effort               打開滑桿
+/effort auto          回到模型預設
+claude --effort xhigh 啟動時指定
+</code></pre>
+<p><strong>ultrathink</strong>：在提示中任何地方寫 <code>ultrathink</code>，<strong>只有這一回合</strong>會用 xhigh 深入思考，不改變整體設定。例如：「ultrathink 為什麼這個 race condition 只在正式環境出現？」</p>
+<p><strong>ultracode</strong>：不是強度等級，而是讓 Claude 對大任務自動派出多個子代理（動態工作流程）。單次使用就在提示中寫 <code>ultracode:</code>；整個 session 開啟用 <code>/effort ultracode</code>。很耗額度，見第 13 章。</p>
+<blockquote>
+<p>⚠️ 從舊模型換到 Opus 5.5 時，預設會從 medium 起跳。若你習慣 high，請在 5.5 上執行一次 <code>/effort high</code>（會記住）。</p>
+</blockquote>
+<h2>10.3 Fast mode</h2>
+<ul>
+<li>同一個 Opus 模型，速度最高約 <strong>2.5 倍</strong>，品質不變，單價較高（Opus 5.5 為 $8／$40）。</li>
+<li>開關：<code>/fast</code> 或 <kbd>Alt+O</kbd>（Mac：<kbd>Option+O</kbd>）；開啟時輸入框旁出現 <code>↯</code>。</li>
+<li>訂閱方案使用 Fast mode 會從 <strong>usage credits（額外儲值）</strong> 扣款，不含在月費額度裡；需要先開啟 usage credits。Team／Enterprise 需管理員開放。</li>
+<li>小技巧：<strong>在對話一開始就開</strong>，中途開會用高價重算整段 context 一次。</li>
+</ul>
+<h2>10.4 Context 管理</h2>
+<p><figure><img loading="lazy" alt="/context" src="images/32-context.png"><figcaption>/context</figcaption></figure></p>
+<p>上圖解讀：</p>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>意思</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>32.7k/1m tokens (3%)</code></td>
+<td>已用 3.27 萬，上限 100 萬</td>
+</tr>
+<tr>
+<td>System prompt／System tools</td>
+<td>Claude Code 本身的說明與工具定義（固定成本）</td>
+</tr>
+<tr>
+<td>Skills</td>
+<td>可用 skills 的清單</td>
+</tr>
+<tr>
+<td>Messages</td>
+<td>你們的對話</td>
+</tr>
+<tr>
+<td>Free space</td>
+<td>剩餘空間</td>
+</tr>
+<tr>
+<td>Autocompact buffer</td>
+<td>預留給自動壓縮的空間</td>
+</tr>
+</tbody>
+</table>
+<p><strong>保持 context 健康的習慣</strong>：</p>
+<ol>
+<li><strong>一個任務一個對話</strong>：換題目就 <code>/clear</code>。</li>
+<li><strong>主動壓縮</strong>：<code>/compact 只保留資料庫結構的決定</code>。</li>
+<li><strong>把吵雜工作交給子代理</strong>：大量搜尋、log 分析讓 subagent 做，只回傳摘要。</li>
+<li><strong>精簡 CLAUDE.md</strong>：長流程改寫成 skill（需要時才載入）。</li>
+<li><strong>關掉用不到的 MCP</strong>：每個 MCP 工具定義都佔空間。</li>
+</ol>
+<p>相關設定：<code>/autocompact 500k</code>（自動壓縮門檻）、<code>"idleCompaction": false</code>（關閉閒置壓縮）、<code>CLAUDE_CODE_DISABLE_1M_CONTEXT=1</code>（強制 20 萬視窗）。</p>
+<h2>10.5 省額度的實用技巧</h2>
+<ul>
+<li>例行工作用 medium 甚至 low；需要時才 <code>ultrathink</code>。</li>
+<li>子代理用 Sonnet：設定 <code>"env": { "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet" }</code>。</li>
+<li>經常 <code>/usage</code> 看哪個 skill、MCP 最耗。</li>
+<li>切換模型、effort、output style 會讓快取失效，下一次請求較貴，避免頻繁切換。</li>
+<li>很久沒動的大對話，重新開始可能比 <code>/resume</code> 更省。</li>
+</ul></section>
+<section id="ch-11" data-title="第 11 章　記憶：CLAUDE.md、Rules、AGENTS.md 與自動記憶"><h1>第 11 章　記憶：CLAUDE.md、Rules、AGENTS.md 與自動記憶</h1>
+<blockquote>
+<p>每個新 session，Claude 都像第一天上班的同事。「記憶」功能讓它每次都知道你的專案規矩和你的習慣。</p>
+</blockquote>
+<h2>11.1 兩種記憶</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>CLAUDE.md</th>
+<th>自動記憶（Auto memory）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>誰寫</td>
+<td>你</td>
+<td>Claude 自己</td>
+</tr>
+<tr>
+<td>內容</td>
+<td>指示與規則</td>
+<td>學到的偏好、你糾正過的事、專案脈絡</td>
+</tr>
+<tr>
+<td>範圍</td>
+<td>專案、個人或組織</td>
+<td>每個 repo 一份</td>
+</tr>
+<tr>
+<td>載入</td>
+<td>每個 session 自動讀</td>
+<td>每個 session 自動讀（前 200 行或 25KB）</td>
+</tr>
+</tbody>
+</table>
+<p><figure><img loading="lazy" alt="/memory 對話框" src="images/26-memory.png"><figcaption>/memory 對話框</figcaption></figure></p>
+<blockquote>
+<p>記憶是「提醒」不是「強制」。要<strong>保證</strong>某事絕不發生，請用 deny 規則或 hook。</p>
+</blockquote>
+<h2>11.2 CLAUDE.md 放哪裡</h2>
+<table>
+<thead>
+<tr>
+<th>類型</th>
+<th>位置</th>
+<th>誰看得到</th>
+<th>放什麼</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>個人</td>
+<td><code>~/.claude/CLAUDE.md</code></td>
+<td>只有你，所有專案</td>
+<td>「回覆用繁體中文」「我習慣用 pnpm」</td>
+</tr>
+<tr>
+<td>專案</td>
+<td><code>./CLAUDE.md</code> 或 <code>./.claude/CLAUDE.md</code></td>
+<td>團隊（commit 進 git）</td>
+<td>架構、指令、規範</td>
+</tr>
+<tr>
+<td>專案本機</td>
+<td><code>./CLAUDE.local.md</code></td>
+<td>只有你（加入 .gitignore）</td>
+<td>你的測試帳號、本機網址</td>
+</tr>
+<tr>
+<td>組織</td>
+<td>IT 部署</td>
+<td>全公司</td>
+<td>公司規範</td>
+</tr>
+</tbody>
+</table>
+<p>從工作目錄往上每一層的 CLAUDE.md 都會載入並<strong>合併</strong>（越靠近工作目錄的越後讀）；子資料夾的 CLAUDE.md 在 Claude 碰到那個資料夾的檔案時才載入。</p>
+<h2>11.3 怎麼寫一份好的 CLAUDE.md</h2>
+<p>先 <code>/init</code> 產生初稿，再修改。範例：</p>
+<pre><code class="language-markdown"># 專案：Acme 網站
+
+## 常用指令
+- 安裝：pnpm install
+- 開發：pnpm dev（http://localhost:3000）
+- 測試：pnpm test；單一檔案：pnpm test -- path/to/file
+- 提交前必須通過：pnpm typecheck &amp;&amp; pnpm lint
+
+## 程式規範
+- TypeScript strict，禁止使用 any
+- API 路由一律用 withAuth() 包起來
+- 新元件放 src/components/，並附 *.test.tsx
+
+## 不要做的事
+- 不要修改 src/generated/（自動產生）
+- 資料庫 migration 要另開 PR
+
+@docs/architecture.md
+</code></pre>
+<p>原則：<strong>具體、簡短、可驗證</strong>。「程式要寫好」沒用；「函式超過 50 行要拆分」有用。用 <code>/doctor prompt-audit</code> 檢查寫得好不好。</p>
+<p><strong>匯入其他檔案</strong>：寫 <code>@路徑</code> 即可，例如 <code>@docs/architecture.md</code>、<code>@~/.claude/my-rules.md</code>。</p>
+<h2>11.4 <code>.claude/rules/</code>：依檔案類型套用的規則</h2>
+<pre><code class="language-markdown">---
+paths:
+  - &quot;src/components/**/*.tsx&quot;
+---
+- 元件一律用 function component 與 hooks
+- props 型別命名為 XxxProps
+</code></pre>
+<p>有 <code>paths</code> 的規則只在 Claude 碰到符合的檔案時載入，比全部塞進 CLAUDE.md 更省 context。個人通用規則放 <code>~/.claude/rules/</code>。</p>
+<h2>11.5 AGENTS.md（與其他 AI 工具共用）</h2>
+<p>很多 AI 編碼工具使用 <code>AGENTS.md</code>。Claude Code 的規則：</p>
+<table>
+<thead>
+<tr>
+<th>你的專案有</th>
+<th>Claude 讀</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>只有 AGENTS.md</td>
+<td>AGENTS.md</td>
+</tr>
+<tr>
+<td>AGENTS.md 和 CLAUDE.md</td>
+<td>只讀 CLAUDE.md</td>
+</tr>
+<tr>
+<td>CLAUDE.md 裡寫了 <code>@AGENTS.md</code></td>
+<td>兩者（不重複）</td>
+</tr>
+</tbody>
+</table>
+<p>可在 <code>/config</code> → Project instructions 改成兩者都讀：</p>
+<p><figure><img loading="lazy" alt="Project instructions" src="images/22-projinstr.png"><figcaption>Project instructions</figcaption></figure></p>
+<blockquote>
+<p>💡 最穩的做法：共用內容寫在 AGENTS.md，CLAUDE.md 第一行寫 <code>@AGENTS.md</code>，下面再補 Claude 專屬的說明。</p>
+</blockquote>
+<h2>11.6 自動記憶</h2>
+<p>Claude 會在工作中自己記下四類筆記：</p>
+<table>
+<thead>
+<tr>
+<th>類型</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>user（關於你）</td>
+<td>「使用者是後端工程師，熟 Go，不熟前端」</td>
+</tr>
+<tr>
+<td>feedback（你的糾正）</td>
+<td>「使用者要求測試用 vitest 不要用 jest」</td>
+</tr>
+<tr>
+<td>project（專案脈絡）</td>
+<td>「v2 API 預計 11 月上線，舊端點暫不刪除」</td>
+</tr>
+<tr>
+<td>reference（資訊在哪）</td>
+<td>「bug 追蹤在 Linear 的 WEB 專案」</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>存在 <code>~/.claude/projects/&lt;專案&gt;/memory/</code>，<code>MEMORY.md</code> 是索引，都是普通 Markdown，可以直接打開修改或刪除。</li>
+<li>開關：<code>/memory</code> 的 Auto-memory、設定 <code>"autoMemoryEnabled": false</code>，或環境變數 <code>CLAUDE_CODE_DISABLE_AUTO_MEMORY=1</code>。</li>
+<li>想讓它記住某件事，直接說「記住：這個專案的測試要用 Docker 跑」。</li>
+</ul>
+<h2>11.7 大型 monorepo 小技巧</h2>
+<ul>
+<li>用 <code>"claudeMdExcludes": ["**/other-team/**/CLAUDE.md"]</code> 跳過別組的指示。</li>
+<li>各子專案放自己的 CLAUDE.md，只在進入時載入。</li>
+<li>共用規則用 <code>.claude/rules/</code> 搭配 <code>paths</code>。</li>
+</ul></section>
+<section id="ch-12" data-title="第 12 章　擴充 Claude Code：Skills、Subagents、Hooks、MCP、Plugins、Mods"><h1>第 12 章　擴充 Claude Code：Skills、Subagents、Hooks、MCP、Plugins、Mods</h1>
+<blockquote>
+<p>先搞清楚「我想解決什麼問題」，再選對工具。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>你的困擾</th>
+<th>用這個</th>
+<th>一句話</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>每次都要重講專案規矩</td>
+<td>CLAUDE.md（第 11 章）</td>
+<td>每次自動讀的說明書</td>
+</tr>
+<tr>
+<td>某種任務有固定步驟，常常要貼同一段說明</td>
+<td><strong>Skill</strong></td>
+<td>需要時才載入的流程說明書，可用 <code>/名稱</code> 呼叫</td>
+</tr>
+<tr>
+<td>想派專人處理特定工作，不要弄亂主對話</td>
+<td><strong>Subagent</strong></td>
+<td>有自己 context 的分身</td>
+</tr>
+<tr>
+<td>某件事「每次都一定要發生」</td>
+<td><strong>Hook</strong></td>
+<td>事件觸發的自動腳本</td>
+</tr>
+<tr>
+<td>要連 GitHub、資料庫、Notion 等外部系統</td>
+<td><strong>MCP</strong></td>
+<td>外部工具的連接器</td>
+</tr>
+<tr>
+<td>想把上面這些打包分享給團隊</td>
+<td><strong>Plugin</strong></td>
+<td>擴充套件包</td>
+</tr>
+<tr>
+<td>想改 Claude Code 的介面、加面板或即時指令</td>
+<td><strong>Mod</strong></td>
+<td>在 Claude Code 內部執行的 JS 程式</td>
+</tr>
+<tr>
+<td>想改變回覆的語氣與格式</td>
+<td><strong>Output style</strong></td>
+<td>整個 session 的回覆風格</td>
+</tr>
+</tbody>
+</table>
+<h2>12.1 Skills（技能）</h2>
+<p>Skill 是一個資料夾，裡面有 <code>SKILL.md</code>。平時只有名稱和描述佔空間，Claude 判斷相關或你輸入 <code>/名稱</code> 時才載入完整內容。</p>
+<p><strong>放在哪裡</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>範圍</th>
+<th>路徑</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>個人（所有專案）</td>
+<td><code>~/.claude/skills/名稱/SKILL.md</code></td>
+</tr>
+<tr>
+<td>專案（commit 分享）</td>
+<td><code>.claude/skills/名稱/SKILL.md</code></td>
+</tr>
+<tr>
+<td>Plugin 內</td>
+<td><code>plugin/skills/名稱/SKILL.md</code>（呼叫：<code>/plugin名:skill名</code>）</td>
+</tr>
+</tbody>
+</table>
+<p><figure><img loading="lazy" alt="/skills 清單（尚未建立任何 skill 時）" src="images/30-skills.png"><figcaption>/skills 清單（尚未建立任何 skill 時）</figcaption></figure></p>
+<p><strong>範例</strong>：<code>.claude/skills/release-notes/SKILL.md</code></p>
+<pre><code class="language-markdown">---
+name: release-notes
+description: 依 git 紀錄撰寫版本說明。使用者要求寫 changelog 或 release notes 時使用。
+argument-hint: [版本號]
+allowed-tools: Bash(git log *), Bash(git describe *)
+disable-model-invocation: true
+---
+
+## 上個版本以來的提交
+!`git log $(git describe --tags --abbrev=0)..HEAD --oneline`
+
+## 請你
+為版本 $ARGUMENTS 撰寫 release notes：
+1. 分成「新功能／修正／破壞性變更」
+2. 每條一句話，用使用者看得懂的語言
+3. 輸出 Markdown
+</code></pre>
+<p>使用：<code>/release-notes 2.4.0</code>。</p>
+<table>
+<thead>
+<tr>
+<th>常用欄位</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>description</code></td>
+<td><strong>最重要</strong>，Claude 靠它判斷何時使用</td>
+</tr>
+<tr>
+<td><code>disable-model-invocation: true</code></td>
+<td>只能由你手動呼叫（適合部署等有副作用的流程）</td>
+</tr>
+<tr>
+<td><code>user-invocable: false</code></td>
+<td>不出現在 / 選單，只給 Claude 當背景知識</td>
+</tr>
+<tr>
+<td><code>allowed-tools</code></td>
+<td>執行時預先核准的工具</td>
+</tr>
+<tr>
+<td><code>argument-hint</code>、<code>$ARGUMENTS</code>、<code>$0</code>、<code>$1</code></td>
+<td>參數提示與取用</td>
+</tr>
+<tr>
+<td><code>!`指令`</code></td>
+<td>送給 Claude 前先執行並嵌入結果</td>
+</tr>
+<tr>
+<td><code>context: fork</code> + <code>agent: Explore</code></td>
+<td>交給子代理在背景執行</td>
+</tr>
+<tr>
+<td><code>model</code>、<code>effort</code></td>
+<td>執行時改用的模型與強度</td>
+</tr>
+<tr>
+<td><code>paths</code></td>
+<td>只在處理符合的檔案時自動觸發</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>舊的 <code>.claude/commands/名稱.md</code> 自訂指令仍可用，但新的建議都寫成 skill。最簡單的建立方法：做完一件事後說「把剛剛的流程做成一個 skill」。</p>
+</blockquote>
+<p>管理：<code>/skills</code>（<kbd>t</kbd> 依大小排序、<kbd>Space</kbd> 切換可見）、<code>/skill-doctor</code>（找出吃 context 又少用的 skill）、設定 <code>skillOverrides</code> 隱藏特定 skill。</p>
+<h2>12.2 Subagents（子代理）</h2>
+<p>子代理在<strong>獨立的 context</strong> 工作，只把摘要交回，主對話保持乾淨。</p>
+<p><strong>內建子代理</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>名稱</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Explore</td>
+<td>快速唯讀搜尋程式碼</td>
+</tr>
+<tr>
+<td>Plan</td>
+<td>Plan 模式中的研究</td>
+</tr>
+<tr>
+<td>general-purpose</td>
+<td>需要查也需要動手的多步驟任務</td>
+</tr>
+<tr>
+<td>claude-code-guide</td>
+<td>回答 Claude Code 用法問題</td>
+</tr>
+<tr>
+<td>statusline-setup</td>
+<td><code>/statusline</code> 時使用</td>
+</tr>
+</tbody>
+</table>
+<p><strong>自訂子代理</strong>：放在 <code>.claude/agents/</code>（專案）或 <code>~/.claude/agents/</code>（個人）。最簡單是直接說「幫我建立一個程式碼審查的 subagent」。</p>
+<pre><code class="language-markdown">---
+name: code-reviewer
+description: 程式碼審查專家。程式改動後主動使用。
+tools: Read, Glob, Grep, Bash(git diff *)
+model: sonnet
+effort: high
+---
+
+你是資深審查員。檢查正確性、安全性、可讀性，
+每個問題列出 檔案:行號、原因與修正建議。
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>常用欄位</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code>、<code>description</code></td>
+<td>必填；description 決定 Claude 何時派它</td>
+</tr>
+<tr>
+<td><code>tools</code>／<code>disallowedTools</code></td>
+<td>可用／禁用的工具</td>
+</tr>
+<tr>
+<td><code>model</code></td>
+<td>sonnet、opus、haiku、fable、inherit</td>
+</tr>
+<tr>
+<td><code>permissionMode</code>、<code>effort</code>、<code>maxTurns</code></td>
+<td>權限、強度、回合上限</td>
+</tr>
+<tr>
+<td><code>skills</code>、<code>mcpServers</code>、<code>hooks</code></td>
+<td>預載的 skill、專屬 MCP 與 hooks</td>
+</tr>
+<tr>
+<td><code>memory</code></td>
+<td>讓它有自己的長期記憶（user／project／local）</td>
+</tr>
+<tr>
+<td><code>isolation: worktree</code></td>
+<td>在獨立 git worktree 中工作</td>
+</tr>
+<tr>
+<td><code>background: true</code></td>
+<td>永遠在背景執行</td>
+</tr>
+</tbody>
+</table>
+<p><strong>呼叫方式</strong>：「用 code-reviewer 檢查我的改動」、<code>@"code-reviewer (agent)"</code>、或 <code>claude --agent code-reviewer</code> 讓整個 session 都用它。</p>
+<p><strong>背景與 Fork</strong>：</p>
+<ul>
+<li>主對話派出的子代理<strong>預設在背景</strong>跑，你可以繼續做別的；它要權限時會在主畫面詢問。</li>
+<li><strong>Fork 子代理</strong>會繼承整段對話（不用重新解釋背景），用 <code>/subtask 任務</code> 啟動，結果回到本對話。</li>
+<li>分不清楚三個指令？<code>/subtask</code>＝派分身做完回報；<code>/fork</code>＝複製成另一個獨立背景 session；<code>/branch</code>＝分岔並切換過去。</li>
+</ul>
+<h2>12.3 Hooks（掛鉤）</h2>
+<p>Hook 讓某件事<strong>每次都一定發生</strong>，不靠 Claude 記得。例如：改完檔自動格式化、阻擋改 <code>.env</code>、需要你時跳通知。</p>
+<p><figure><img loading="lazy" alt="/hooks 檢視（唯讀，要新增請改 settings.json 或請 Claude 幫忙）" src="images/27-hooks.png"><figcaption>/hooks 檢視（唯讀，要新增請改 settings.json 或請 Claude 幫忙）</figcaption></figure></p>
+<p><strong>常用事件</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>事件</th>
+<th>何時觸發</th>
+<th>常見用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PreToolUse</code></td>
+<td>工具執行前（可阻擋）</td>
+<td>擋危險指令、保護檔案</td>
+</tr>
+<tr>
+<td><code>PostToolUse</code></td>
+<td>工具成功後</td>
+<td>自動格式化、跑 lint</td>
+</tr>
+<tr>
+<td><code>UserPromptSubmit</code></td>
+<td>你送出訊息時</td>
+<td>加入額外背景、檢查敏感字</td>
+</tr>
+<tr>
+<td><code>Notification</code></td>
+<td>Claude 需要你時</td>
+<td>桌面通知</td>
+</tr>
+<tr>
+<td><code>Stop</code></td>
+<td>Claude 回答完</td>
+<td>檢查任務是否真的完成</td>
+</tr>
+<tr>
+<td><code>SessionStart</code></td>
+<td>session 開始（含壓縮後）</td>
+<td>載入環境資訊</td>
+</tr>
+<tr>
+<td><code>PreCompact</code>／<code>PostCompact</code></td>
+<td>壓縮前後</td>
+<td>保存重要資訊</td>
+</tr>
+<tr>
+<td><code>SubagentStart</code>／<code>SubagentStop</code></td>
+<td>子代理開始／結束</td>
+<td>記錄</td>
+</tr>
+<tr>
+<td><code>FileChanged</code>、<code>CwdChanged</code></td>
+<td>檔案變動、切換目錄</td>
+<td>自動載入 .env</td>
+</tr>
+<tr>
+<td>其他</td>
+<td><code>PermissionRequest</code>、<code>PermissionDenied</code>、<code>PostToolBatch</code>、<code>SessionEnd</code>、<code>WorktreeCreate</code>、<code>PreModelSwitch</code>…</td>
+<td>進階用途</td>
+</tr>
+</tbody>
+</table>
+<p><strong>範例 1：改完檔自動跑 Prettier</strong>（<code>.claude/settings.json</code>）</p>
+<pre><code class="language-json">{
+  &quot;hooks&quot;: {
+    &quot;PostToolUse&quot;: [
+      {
+        &quot;matcher&quot;: &quot;Edit|Write&quot;,
+        &quot;hooks&quot;: [
+          { &quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;jq -r '.tool_input.file_path' | xargs npx prettier --write&quot; }
+        ]
+      }
+    ]
+  }
+}
+</code></pre>
+<p><strong>範例 2：禁止修改 .env</strong>——腳本 <code>.claude/hooks/protect.sh</code>（記得 <code>chmod +x</code>）：</p>
+<pre><code class="language-bash">#!/bin/bash
+FILE=$(jq -r '.tool_input.file_path // empty')
+if [[ &quot;$FILE&quot; == *&quot;.env&quot;* ]]; then
+  echo &quot;不可以修改 $FILE&quot; &gt;&amp;2
+  exit 2   # exit 2 = 阻擋，stderr 會告訴 Claude 原因
+fi
+exit 0     # exit 0 = 放行
+</code></pre>
+<pre><code class="language-json">{
+  &quot;hooks&quot;: {
+    &quot;PreToolUse&quot;: [
+      {
+        &quot;matcher&quot;: &quot;Edit|Write&quot;,
+        &quot;hooks&quot;: [
+          { &quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;\&quot;$CLAUDE_PROJECT_DIR\&quot;/.claude/hooks/protect.sh&quot;, &quot;onFailure&quot;: &quot;block&quot; }
+        ]
+      }
+    ]
+  }
+}
+</code></pre>
+<p><code>"onFailure": "block"</code>：腳本本身出錯或逾時也當作阻擋，安全用途建議加上。</p>
+<p><strong>範例 3：需要你時跳 Windows 通知</strong>（PowerShell）</p>
+<pre><code class="language-json">{
+  &quot;hooks&quot;: {
+    &quot;Notification&quot;: [
+      { &quot;hooks&quot;: [ { &quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;powershell -c \&quot;[console]::beep(800,300)\&quot;&quot; } ] }
+    ]
+  }
+}
+</code></pre>
+<p>Hook 類型：<code>command</code>（執行指令）、<code>http</code>（POST 到網址）、<code>mcp_tool</code>、<code>prompt</code>（讓模型判斷 ok/不 ok）、<code>agent</code>（實驗性）。</p>
+<blockquote>
+<p>⚠️ Hook 以你的權限執行。審查別人 commit 的 hooks；全部停用用 <code>"disableAllHooks": true</code>。</p>
+</blockquote>
+<h2>12.4 MCP：連接外部工具</h2>
+<pre><code class="language-bash"># 遠端 HTTP 伺服器（最常見）
+claude mcp add --transport http notion https://mcp.notion.com/mcp
+
+# 本機程式（-- 後面是啟動指令）
+claude mcp add --transport stdio airtable --env AIRTABLE_API_KEY=你的金鑰 -- npx -y airtable-mcp-server
+
+# 管理
+claude mcp list
+claude mcp remove notion
+claude mcp login sentry    # 完成 OAuth 登入
+</code></pre>
+<p>session 中輸入 <code>/mcp</code> 查看狀態、登入、啟用／停用。</p>
+<table>
+<thead>
+<tr>
+<th>範圍（<code>--scope</code>）</th>
+<th>誰能用</th>
+<th>存在哪</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>local（預設）</td>
+<td>只有你、這個專案</td>
+<td><code>~/.claude.json</code></td>
+</tr>
+<tr>
+<td>project</td>
+<td>團隊（commit）</td>
+<td>專案根目錄 <code>.mcp.json</code></td>
+</tr>
+<tr>
+<td>user</td>
+<td>你的所有專案</td>
+<td><code>~/.claude.json</code></td>
+</tr>
+</tbody>
+</table>
+<p>你在 claude.ai 連好的 connectors 也能在 Claude Code 使用。MCP 工具太多會吃 context，用不到的請停用。</p>
+<h2>12.5 Plugins（擴充套件包）</h2>
+<p>Plugin 把 skills、子代理、hooks、MCP、output styles、workflows、mods 打包，透過「市集（marketplace）」分享。</p>
+<pre><code>/plugin                                         打開選單（Discover／Installed／Marketplaces）
+/plugin install code-review@claude-plugins-official
+claude plugin marketplace add 公司/claude-plugins   加入公司的市集
+/reload-plugins                                 不重開就套用
+</code></pre>
+<p><figure><img loading="lazy" alt="/plugin 市集（官方市集有數百個 plugin）" src="images/29-plugin.png"><figcaption>/plugin 市集（官方市集有數百個 plugin）</figcaption></figure></p>
+<p>團隊共用：在 <code>.claude/settings.json</code> 寫 <code>extraKnownMarketplaces</code> 與 <code>enabledPlugins</code>，隊友信任資料夾後自動取得。</p>
+<blockquote>
+<p>⚠️ Plugin 可能含有會執行的程式碼，只安裝信任來源。</p>
+</blockquote>
+<h2>12.6 Mods（2026/10 新功能）</h2>
+<p>Mod 是一種用 JavaScript／TypeScript 寫、<strong>在 Claude Code 內部執行</strong>的 plugin，可以：</p>
+<ul>
+<li>畫出面板、按鈕、提示框上方的資訊列</li>
+<li>改造內建介面（例如 spinner 顯示工具次數）</li>
+<li>攔截工具呼叫（例如危險指令先顯示影響範圍再讓你決定）</li>
+<li>新增立即執行的 <code>/指令</code></li>
+</ul>
+<p>做法：直接請 Claude「做一個 mod，在提示框上方顯示 context 使用量」。內建的 <code>/diff</code> 面板、AGENTS.md 讀取其實就是 mods。關閉全部：<code>--safe-mode</code>（一次）或 <code>"disableAllHooks": true</code>。</p>
+<blockquote>
+<p>⚠️ Mod 不在沙盒中，能讀寫你的檔案與秘密。只裝信任的；安裝前用 <code>claude plugin validate 路徑</code> 看它會做什麼。</p>
+</blockquote>
+<h2>12.7 Output styles（回覆風格）</h2>
+<p><figure><img loading="lazy" alt="Output style 選單" src="images/15-outputstyle.png"><figcaption>Output style 選單</figcaption></figure></p>
+<p><code>/output-style concise</code> 或 <code>"outputStyle": "Explanatory"</code>。自訂風格：在 <code>~/.claude/output-styles/繁中導師.md</code> 寫：</p>
+<pre><code class="language-markdown">---
+name: 繁中導師
+description: 用繁體中文、先給圖再解釋
+keep-coding-instructions: true
+---
+所有回覆使用繁體中文（台灣用語）。解釋架構時先畫 Mermaid 圖，再用條列說明。
+</code></pre>
+<h2>12.8 狀態列（Status line）</h2>
+<pre><code>/statusline 顯示目前模型、git 分支、context 使用百分比
+</code></pre>
+<p>Claude 會幫你寫好腳本並設定。手動設定：<code>"statusLine": { "type": "command", "command": "~/.claude/statusline.sh" }</code>，腳本從 stdin 收到 JSON（模型、目錄、花費、context…），輸出的文字就是狀態列。</p></section>
+<section id="ch-13" data-title="第 13 章　進階：平行工作、自動化、雲端與程式碼審查"><h1>第 13 章　進階：平行工作、自動化、雲端與程式碼審查</h1>
+<h2>13.1 同時跑多個 Claude</h2>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>誰規劃</th>
+<th>規模</th>
+<th>適合</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>子代理／<code>/subtask</code></td>
+<td>Claude 逐回合決定</td>
+<td>每次幾個</td>
+<td>搜尋、審查、小支線</td>
+</tr>
+<tr>
+<td>背景 session（Agent view）</td>
+<td>你</td>
+<td>你照顧得來的數量</td>
+<td>同時推進幾個獨立任務</td>
+</tr>
+<tr>
+<td><code>/batch</code></td>
+<td>Claude 拆解</td>
+<td>5–30 份</td>
+<td>大規模遷移、重構</td>
+</tr>
+<tr>
+<td>Agent teams</td>
+<td>隊長代理帶隊友</td>
+<td>少數長期隊友</td>
+<td>需要互相討論的長任務</td>
+</tr>
+<tr>
+<td>動態工作流程（Workflows）</td>
+<td>Claude 寫的腳本</td>
+<td>數十～上百個代理</td>
+<td>全庫稽核、大量檔案轉換、交叉驗證研究</td>
+</tr>
+</tbody>
+</table>
+<h3>Agent view 與背景 session</h3>
+<p><figure><img loading="lazy" alt="Agent view" src="images/51-agentview.png"><figcaption>Agent view</figcaption></figure></p>
+<pre><code class="language-bash">claude agents                      # 打開 Agent view
+claude --bg &quot;調查那個不穩定的測試&quot;   # 直接開一個背景 session
+/bg                                # 把目前 session 丟到背景
+/fork 改用另一種做法試試             # 複製對話成新背景 session
+claude attach 名稱 / claude logs 名稱 / claude stop 名稱
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Agent view 按鍵</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>輸入任務 + <kbd>Enter</kbd></td>
+<td>派出新 session</td>
+</tr>
+<tr>
+<td><kbd>Space</kbd></td>
+<td>預覽並直接回覆</td>
+</tr>
+<tr>
+<td><kbd>Enter</kbd> 或 <kbd>→</kbd></td>
+<td>進入完整對話；空白輸入按 <kbd>←</kbd> 返回</td>
+</tr>
+<tr>
+<td><kbd>Ctrl+T</kbd></td>
+<td>釘選（保持執行）</td>
+</tr>
+<tr>
+<td><kbd>Ctrl+R</kbd></td>
+<td>重新命名</td>
+</tr>
+<tr>
+<td><kbd>Ctrl+X</kbd></td>
+<td>停止（2 秒內再按刪除）</td>
+</tr>
+<tr>
+<td><kbd>Ctrl+F</kbd></td>
+<td>依名稱搜尋</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>背景 session 由背景服務執行，<strong>關掉終端機也會繼續</strong>；閒置約 1 小時會暫停，回覆就恢復。</li>
+<li>從 Agent view 派出的 session 會自動在 <code>.claude/worktrees/</code> 下建立自己的 <strong>git worktree</strong>，平行修改不會互相覆蓋。</li>
+</ul>
+<h3>Git worktree</h3>
+<p>手動建立：<code>claude -w feature-auth</code>；從 PR 建立：<code>claude -w '#1234'</code>。相關設定：<code>worktree.baseRef</code>、<code>worktree.symlinkDirectories</code>（共用 node_modules 省空間）。</p>
+<h3>動態工作流程（Workflows）與 ultracode</h3>
+<pre><code>/deep-research Node.js 20 到 22 的權限模型改了什麼？     內建研究工作流程
+ultracode: 稽核 src/routes/ 下所有 API 的授權檢查          單次觸發
+/workflows                                              查看進度（p 暫停、x 停止、s 存成指令）
+</code></pre>
+<p>Claude 會寫一個 JavaScript 腳本，同時指揮多個子代理，還能讓代理互相檢查結果。好用的工作流程可以存成 <code>/指令</code> 重複使用（存到 <code>.claude/workflows/</code>）。</p>
+<blockquote>
+<p>⚠️ 工作流程非常耗額度。先用小範圍試，在 <code>/workflows</code> 看每個代理的 token 消耗；<code>/config</code> → Dynamic workflow size 可限制規模。</p>
+</blockquote>
+<h2>13.2 自動化與排程</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><code>/loop</code></th>
+<th>桌面版排程</th>
+<th>雲端排程任務</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>在哪跑</td>
+<td>目前開著的 session</td>
+<td>你的電腦</td>
+<td>Anthropic 雲端</td>
+</tr>
+<tr>
+<td>關電腦</td>
+<td>停止</td>
+<td>停止</td>
+<td>照跑</td>
+</tr>
+<tr>
+<td>觸發</td>
+<td>固定間隔</td>
+<td>排程</td>
+<td>排程、API、GitHub 事件</td>
+</tr>
+<tr>
+<td>建立</td>
+<td><code>/loop 10m 檢查 CI</code></td>
+<td>桌面 App</td>
+<td><code>/schedule</code> 或 claude.ai/code/routines</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>/goal 所有測試通過且沒有型別錯誤</code>：Claude 會持續工作直到條件成立。</li>
+<li><code>autoContinueAtUsageLimit</code>：額度用完時，重置後自動繼續。</li>
+</ul>
+<h3>非互動模式（腳本、CI）</h3>
+<pre><code class="language-bash">claude -p &quot;列出所有 TODO&quot; --output-format json
+claude -p &quot;跑測試並修正失敗&quot; --permission-mode dontAsk --allowedTools &quot;Bash(npm test)&quot; &quot;Read&quot; &quot;Edit&quot;
+claude -p &quot;重構 utils&quot; --max-budget-usd 5 --max-turns 30
+cat error.log | claude -p &quot;分析這個錯誤&quot;
+</code></pre>
+<h3>GitHub 整合</h3>
+<ul>
+<li>session 中執行 <code>/install-github-app</code>：安裝 Claude GitHub App 並設定 Actions。之後在 issue／PR 留言 <code>@claude 幫忙修這個 bug</code>。</li>
+<li><strong>Code Review</strong>：PR 留言 <code>@claude review</code>（單次）、<code>@claude review always</code>（每次更新都審）、<code>@claude review stop</code>（停止）。</li>
+<li><code>/autofix-pr</code>：開雲端 session 盯著 PR，CI 失敗或有審查意見就自動修。</li>
+</ul>
+<h2>13.3 程式碼審查工具</h2>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/code-review</code></td>
+<td>本機找 bug；<code>--fix</code> 直接修；<code>high</code>、<code>xhigh</code> 更仔細；<code>/code-review 1234</code> 審 PR</td>
+</tr>
+<tr>
+<td><code>/code-review ultra</code>（<code>/ultrareview</code>）</td>
+<td>雲端多代理深度審查，結果回到你的終端機</td>
+</tr>
+<tr>
+<td><code>/security-review</code></td>
+<td>資安審查（注入、授權、資料外洩）</td>
+</tr>
+<tr>
+<td><code>/simplify</code></td>
+<td>找可重用、可簡化的地方並修改</td>
+</tr>
+<tr>
+<td><code>/verify</code>、<code>/run</code></td>
+<td>實際啟動 app 驗證功能</td>
+</tr>
+</tbody>
+</table>
+<h2>13.4 雲端、手機與遠端</h2>
+<ul>
+<li><strong>雲端 session</strong>：<code>claude --cloud "修登入 bug"</code> 或到 claude.ai/code；在 Anthropic 雲端跑，關電腦也繼續。<code>/teleport</code> 把雲端 session 拉回本機。</li>
+<li><strong>Remote Control</strong>：<code>/rc</code> 或 <code>claude --rc</code> 讓目前 session 能從手機或網頁遙控（程式仍在你電腦上跑），任務完成或需要你時會推播。</li>
+<li><strong>手機 App</strong>：<code>/mobile</code> 顯示下載 QR code。</li>
+<li><strong>Chrome 整合</strong>：<code>claude --chrome</code> 讓 Claude 操作瀏覽器測試網頁。</li>
+</ul>
+<h2>13.5 Agent SDK</h2>
+<p>想用程式打造自己的 AI 代理？Agent SDK（TypeScript／Python）提供和 Claude Code 相同的代理迴圈、工具、權限、hooks、子代理與 MCP。文件：code.claude.com/docs/en/agent-sdk/overview。</p></section>
+<section id="ch-14" data-title="第 14 章　命令列參數與環境變數"><h1>第 14 章　命令列參數與環境變數</h1>
+<h2>14.1 常用啟動方式</h2>
+<pre><code class="language-bash">claude                               # 互動模式
+claude &quot;修好 build 錯誤&quot;               # 帶第一句話啟動
+claude -p &quot;解釋這個函式&quot;               # 非互動：印出結果就結束
+cat logs.txt | claude -p &quot;分析錯誤&quot;    # 把內容傳給 Claude
+claude -c                            # 接續這個資料夾最近的對話
+claude -r                            # 從清單挑舊對話
+claude -r &quot;登入功能&quot;                   # 用名稱恢復
+claude -n &quot;新功能&quot;                     # 為 session 命名
+claude -w feature-auth               # 在獨立 git worktree 中啟動
+claude --bg &quot;調查 flaky test&quot;          # 直接開背景 session
+claude --cloud &quot;修登入 bug&quot;            # 開雲端 session
+</code></pre>
+<p><code>claude --help</code> 的開頭：</p>
+<p><figure><img loading="lazy" alt="claude --help" src="images/52-help-cli.png"><figcaption>claude --help</figcaption></figure></p>
+<h2>14.2 子指令</h2>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>claude update</code></td>
+<td>更新</td>
+</tr>
+<tr>
+<td><code>claude install stable</code>／<code>latest</code>／版本號</td>
+<td>安裝指定版本或頻道</td>
+</tr>
+<tr>
+<td><code>claude doctor</code></td>
+<td>診斷安裝與設定（唯讀）</td>
+</tr>
+<tr>
+<td><code>claude auth login</code>／<code>logout</code>／<code>status</code></td>
+<td>登入管理</td>
+</tr>
+<tr>
+<td><code>claude setup-token</code></td>
+<td>產生給 CI 用的長效 token</td>
+</tr>
+<tr>
+<td><code>claude agents</code></td>
+<td>Agent view</td>
+</tr>
+<tr>
+<td><code>claude attach</code>／<code>logs</code>／<code>stop</code>／<code>respawn</code>／<code>rm</code></td>
+<td>管理背景 session</td>
+</tr>
+<tr>
+<td><code>claude mcp add</code>／<code>list</code>／<code>get</code>／<code>remove</code>／<code>login</code></td>
+<td>MCP 管理</td>
+</tr>
+<tr>
+<td><code>claude plugin install</code>／<code>validate</code>／<code>eval</code></td>
+<td>Plugin 管理</td>
+</tr>
+<tr>
+<td><code>claude auto-mode defaults</code>／<code>config</code>／<code>reset</code></td>
+<td>檢視 Auto mode 規則</td>
+</tr>
+<tr>
+<td><code>claude ultrareview 1234</code></td>
+<td>在 CI 中跑深度審查</td>
+</tr>
+<tr>
+<td><code>claude remote-control</code></td>
+<td>伺服器模式的遠端控制</td>
+</tr>
+<tr>
+<td><code>claude import cursor</code></td>
+<td>從其他工具匯入設定</td>
+</tr>
+<tr>
+<td><code>claude purge 路徑 --dry-run</code></td>
+<td>刪除某專案在這台電腦的 Claude 資料</td>
+</tr>
+</tbody>
+</table>
+<h2>14.3 常用參數</h2>
+<table>
+<thead>
+<tr>
+<th>參數</th>
+<th>說明</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--model</code></td>
+<td>本次模型</td>
+<td><code>--model sonnet</code></td>
+</tr>
+<tr>
+<td><code>--effort</code></td>
+<td>本次推理強度</td>
+<td><code>--effort high</code></td>
+</tr>
+<tr>
+<td><code>--permission-mode</code></td>
+<td>起始權限模式</td>
+<td><code>--permission-mode plan</code></td>
+</tr>
+<tr>
+<td><code>--allowedTools</code>／<code>--disallowedTools</code></td>
+<td>允許／禁止的工具</td>
+<td><code>--allowedTools "Bash(git *)" "Read"</code></td>
+</tr>
+<tr>
+<td><code>--add-dir</code></td>
+<td>額外可存取資料夾</td>
+<td><code>--add-dir ../shared</code></td>
+</tr>
+<tr>
+<td><code>--settings</code></td>
+<td>本次額外設定</td>
+<td><code>--settings '{"outputStyle":"Concise"}'</code></td>
+</tr>
+<tr>
+<td><code>--append-system-prompt</code></td>
+<td>附加系統指示</td>
+<td><code>--append-system-prompt "一律用繁體中文"</code></td>
+</tr>
+<tr>
+<td><code>--output-format</code></td>
+<td><code>-p</code> 的輸出格式：text、json、stream-json</td>
+<td><code>-p "..." --output-format json</code></td>
+</tr>
+<tr>
+<td><code>--max-turns</code>／<code>--max-budget-usd</code></td>
+<td>限制回合數／花費（<code>-p</code>）</td>
+<td><code>--max-budget-usd 3</code></td>
+</tr>
+<tr>
+<td><code>--mcp-config</code></td>
+<td>載入 MCP 設定檔</td>
+<td><code>--mcp-config ./mcp.json</code></td>
+</tr>
+<tr>
+<td><code>--plugin-dir</code></td>
+<td>本次載入開發中的 plugin</td>
+<td><code>--plugin-dir ./my-plugin</code></td>
+</tr>
+<tr>
+<td><code>--agent</code></td>
+<td>用某個子代理當主代理</td>
+<td><code>--agent code-reviewer</code></td>
+</tr>
+<tr>
+<td><code>--safe-mode</code></td>
+<td>停用所有自訂，排查問題</td>
+<td><code>claude --safe-mode</code></td>
+</tr>
+<tr>
+<td><code>--bare</code></td>
+<td>最精簡模式，腳本啟動更快</td>
+<td><code>claude --bare -p "..."</code></td>
+</tr>
+<tr>
+<td><code>--debug</code></td>
+<td>除錯輸出</td>
+<td><code>--debug='mcp'</code></td>
+</tr>
+<tr>
+<td><code>--chrome</code>／<code>--ide</code></td>
+<td>連 Chrome／IDE</td>
+<td><code>claude --chrome</code></td>
+</tr>
+<tr>
+<td><code>--remote-control</code>（<code>--rc</code>）</td>
+<td>開放遠端控制</td>
+<td><code>claude --rc</code></td>
+</tr>
+<tr>
+<td><code>--dangerously-skip-permissions</code></td>
+<td>完全不問（只在隔離環境）</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h2>14.4 常用環境變數</h2>
+<p>可以在終端機 <code>export 變數=值</code>（Windows PowerShell：<code>$env:變數="值"</code>），或寫進設定檔的 <code>"env"</code>：</p>
+<pre><code class="language-json">{ &quot;env&quot;: { &quot;CLAUDE_CODE_SUBAGENT_MODEL&quot;: &quot;sonnet&quot; } }
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>變數</th>
+<th>用途</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ANTHROPIC_MODEL</code></td>
+<td>本次模型（優先於設定檔）</td>
+<td><code>opus</code></td>
+</tr>
+<tr>
+<td><code>ANTHROPIC_DEFAULT_MODEL</code></td>
+<td>新 session 預設模型</td>
+<td><code>sonnet</code></td>
+</tr>
+<tr>
+<td><code>ANTHROPIC_DEFAULT_OPUS_MODEL</code> 等</td>
+<td>改變 opus／sonnet／haiku／fable 別名指向</td>
+<td><code>claude-opus-5-5</code></td>
+</tr>
+<tr>
+<td><code>CLAUDE_CODE_EFFORT_LEVEL</code></td>
+<td>推理強度</td>
+<td><code>high</code></td>
+</tr>
+<tr>
+<td><code>CLAUDE_CODE_SUBAGENT_MODEL</code></td>
+<td>子代理用的模型</td>
+<td><code>sonnet</code></td>
+</tr>
+<tr>
+<td><code>CLAUDE_CODE_AUTO_COMPACT_WINDOW</code></td>
+<td>自動壓縮門檻</td>
+<td><code>500000</code></td>
+</tr>
+<tr>
+<td><code>CLAUDE_CODE_DISABLE_1M_CONTEXT</code></td>
+<td>強制 20 萬 context</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><code>MAX_THINKING_TOKENS</code></td>
+<td>設 0 關閉思考（可關閉的模型）</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>CLAUDE_CODE_FORK_SUBAGENT</code></td>
+<td>設 0 關閉 fork 子代理</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>CLAUDE_CODE_DISABLE_AUTO_MEMORY</code></td>
+<td>關閉自動記憶</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><code>CLAUDE_CODE_DISABLE_WORKFLOWS</code></td>
+<td>關閉動態工作流程</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><code>CLAUDE_CODE_DISABLE_AGENT_VIEW</code></td>
+<td>關閉 Agent view</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><code>CLAUDE_CODE_DISABLE_FAST_MODE</code></td>
+<td>關閉 Fast mode</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><code>CLAUDE_CODE_DISABLE_FILE_MENTIONS</code></td>
+<td><code>@</code> 只給路徑、不直接塞檔案內容</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><code>CLAUDE_CODE_NEW_INIT</code></td>
+<td><code>/init</code> 使用互動完整流程</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><code>CLAUDE_CONFIG_DIR</code></td>
+<td>改變 <code>~/.claude</code> 的位置</td>
+<td><code>~/work-claude</code></td>
+</tr>
+<tr>
+<td><code>MCP_TIMEOUT</code>／<code>MCP_TOOL_TIMEOUT</code></td>
+<td>MCP 啟動／工具逾時（毫秒）</td>
+<td><code>30000</code></td>
+</tr>
+<tr>
+<td><code>MAX_MCP_OUTPUT_TOKENS</code></td>
+<td>MCP 輸出上限（預設 25000）</td>
+<td><code>50000</code></td>
+</tr>
+<tr>
+<td><code>ANTHROPIC_API_KEY</code></td>
+<td>用 API key 驗證</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>ANTHROPIC_BASE_URL</code></td>
+<td>經公司閘道連線</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>CLAUDE_CODE_USE_BEDROCK</code>／<code>CLAUDE_CODE_USE_VERTEX</code></td>
+<td>使用 AWS／Google Cloud</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><code>DISABLE_TELEMETRY</code></td>
+<td>關閉遙測</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><code>DISABLE_AUTOUPDATER</code></td>
+<td>關閉自動更新</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code></td>
+<td>關閉非必要網路流量</td>
+<td><code>1</code></td>
+</tr>
+</tbody>
+</table></section>
+<section id="ch-15" data-title="第 15 章　疑難排解、最佳實踐與新功能時間軸"><h1>第 15 章　疑難排解、最佳實踐與新功能時間軸</h1>
+<h2>15.1 常見問題</h2>
+<table>
+<thead>
+<tr>
+<th>狀況</th>
+<th>怎麼辦</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>安裝後找不到 <code>claude</code></td>
+<td>重開終端機；仍不行參考官方 Troubleshoot installation 修正 PATH</td>
+</tr>
+<tr>
+<td>不知道哪裡壞了</td>
+<td>session 中 <code>/doctor</code>（會提議修正）；終端機 <code>claude doctor</code>（只診斷）</td>
+</tr>
+<tr>
+<td>懷疑是自己的設定造成</td>
+<td><code>claude --safe-mode</code> 停用所有自訂後比較</td>
+</tr>
+<tr>
+<td>設定沒生效</td>
+<td><code>/status</code> 看 Setting sources；檢查 JSON 格式（不能有註解、結尾逗號）；是否被更高優先的檔案覆蓋；專案設定是否還沒信任資料夾</td>
+</tr>
+<tr>
+<td>Claude 不照 CLAUDE.md 做</td>
+<td>寫得更具體簡短；<code>/doctor prompt-audit</code>；必須遵守的改用 hook 或 deny 規則</td>
+</tr>
+<tr>
+<td>一直跳權限詢問</td>
+<td><code>/fewer-permission-prompts</code>；回答時選「don't ask again」；考慮 Auto mode 或沙盒</td>
+</tr>
+<tr>
+<td>Auto mode 一直擋</td>
+<td><code>/permissions</code> → Recently denied 手動重試；<code>/auto-mode-setup</code>；在對話中明確授權</td>
+</tr>
+<tr>
+<td>回答品質變差、忘東忘西</td>
+<td>context 太滿：<code>/clear</code> 開新對話或 <code>/compact</code></td>
+</tr>
+<tr>
+<td>額度用太快</td>
+<td><code>/usage</code> 看誰最耗；降低 effort；子代理用 Sonnet；少用 workflows</td>
+</tr>
+<tr>
+<td>Hook 沒觸發</td>
+<td><code>/hooks</code> 確認；腳本 <code>chmod +x</code>；<code>claude --debug</code> 看執行紀錄</td>
+</tr>
+<tr>
+<td>MCP 連不上</td>
+<td><code>/mcp</code> 看狀態、重新登入；<code>claude --debug='mcp'</code></td>
+</tr>
+<tr>
+<td>畫面亂掉</td>
+<td><kbd>Ctrl+L</kbd>；試 <code>/tui fullscreen</code></td>
+</tr>
+<tr>
+<td>想回報 bug</td>
+<td><code>/bug</code>（可選擇附多少對話，送出前有確認）</td>
+</tr>
+</tbody>
+</table>
+<h2>15.2 給新手的十條最佳實踐</h2>
+<ol>
+<li><strong>專案一定用 git</strong>，改壞了能救回來。</li>
+<li><strong>先問再改</strong>：先讓 Claude 讀懂、解釋，再要求修改。</li>
+<li><strong>大改動先 Plan</strong>：<kbd>Shift+Tab</kbd> 到 Plan 模式，看過計畫再執行。</li>
+<li><strong>給驗證方法</strong>：告訴它「完成的標準」（哪個測試要過、畫面要長怎樣）。</li>
+<li><strong>方向不對立刻 <kbd>Esc</kbd></strong>，不要等它做完。</li>
+<li><strong>一個任務一個對話</strong>，換題目就 <code>/clear</code>。</li>
+<li><strong>重複講的事寫進 CLAUDE.md</strong>，重複的流程做成 skill。</li>
+<li><strong>仔細看權限詢問框</strong>，尤其是刪除、推送、部署。</li>
+<li><strong>秘密檔案設 deny</strong>：<code>Read(./.env)</code>。</li>
+<li><strong>每次看 <code>/diff</code> 再 commit</strong>。</li>
+</ol>
+<h2>15.3 推薦設定（複製即用）</h2>
+<p><strong>新手安心版</strong>（<code>~/.claude/settings.json</code>）：</p>
+<pre><code class="language-json">{
+  &quot;$schema&quot;: &quot;https://json.schemastore.org/claude-code-settings.json&quot;,
+  &quot;language&quot;: &quot;繁體中文&quot;,
+  &quot;outputStyle&quot;: &quot;Explanatory&quot;,
+  &quot;permissions&quot;: {
+    &quot;defaultMode&quot;: &quot;default&quot;,
+    &quot;deny&quot;: [&quot;Read(./.env)&quot;, &quot;Read(./.env.*)&quot;, &quot;Read(./secrets/**)&quot;]
+  }
+}
+</code></pre>
+<p><strong>日常效率版</strong>：</p>
+<pre><code class="language-json">{
+  &quot;$schema&quot;: &quot;https://json.schemastore.org/claude-code-settings.json&quot;,
+  &quot;language&quot;: &quot;繁體中文&quot;,
+  &quot;outputStyle&quot;: &quot;Concise&quot;,
+  &quot;effortLevel&quot;: &quot;high&quot;,
+  &quot;permissions&quot;: {
+    &quot;allow&quot;: [&quot;Bash(git status)&quot;, &quot;Bash(git diff *)&quot;, &quot;Bash(git log *)&quot;, &quot;Bash(npm run test *)&quot;, &quot;Bash(npm run lint)&quot;],
+    &quot;deny&quot;: [&quot;Read(./.env)&quot;, &quot;Read(./.env.*)&quot;]
+  },
+  &quot;env&quot;: { &quot;CLAUDE_CODE_SUBAGENT_MODEL&quot;: &quot;sonnet&quot; }
+}
+</code></pre>
+<p><strong>團隊專案</strong>（<code>.claude/settings.json</code>，commit 進 repo）：</p>
+<pre><code class="language-json">{
+  &quot;$schema&quot;: &quot;https://json.schemastore.org/claude-code-settings.json&quot;,
+  &quot;permissions&quot;: {
+    &quot;allow&quot;: [&quot;Bash(pnpm test *)&quot;, &quot;Bash(pnpm lint)&quot;, &quot;Bash(pnpm typecheck)&quot;],
+    &quot;ask&quot;: [&quot;Bash(git push *)&quot;],
+    &quot;deny&quot;: [&quot;Read(./.env)&quot;, &quot;Edit(./src/generated/**)&quot;]
+  },
+  &quot;hooks&quot;: {
+    &quot;PostToolUse&quot;: [
+      { &quot;matcher&quot;: &quot;Edit|Write&quot;, &quot;hooks&quot;: [ { &quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;pnpm prettier --write .&quot; } ] }
+    ]
+  }
+}
+</code></pre>
+<h2>15.4 2026 年 8–10 月重要更新</h2>
+<table>
+<thead>
+<tr>
+<th>日期（版本）</th>
+<th>更新</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>8 月上旬</td>
+<td>Session 之間可互傳訊息；自架雲端環境 beta；Auto mode 成為 Pro／Max／Team 新 session 預設</td>
+</tr>
+<tr>
+<td>8 月中</td>
+<td>桌面版額度重置後自動續跑；fork 子代理預設開啟；<code>@</code> 可提及其他 session</td>
+</tr>
+<tr>
+<td>8 月下旬</td>
+<td><code>/design</code> 預覽；Concise 回覆風格；桌面版可 <code>/resume</code> 終端機 session</td>
+</tr>
+<tr>
+<td>9 月初</td>
+<td>Claude Fable 5.1 上線；<code>/skill-doctor</code>；全螢幕 <code>/diff</code> 即時面板</td>
+</tr>
+<tr>
+<td>9/18（2.1.277）</td>
+<td>沒有 CLAUDE.md 時自動讀 AGENTS.md</td>
+</tr>
+<tr>
+<td>9/22（2.1.280）</td>
+<td><strong>Claude Opus 5.5</strong> 成為預設模型</td>
+</tr>
+<tr>
+<td>9/28（2.1.284）</td>
+<td>Sonnet 5.5；互動模式全面預設 Auto mode</td>
+</tr>
+<tr>
+<td>10/1（2.1.287）</td>
+<td><strong>Mods</strong> 正式上線</td>
+</tr>
+<tr>
+<td>10/7（2.1.293）</td>
+<td>Haiku 5.5 成為預設 Haiku</td>
+</tr>
+<tr>
+<td>10/8（2.1.295）</td>
+<td>Hooks 支援 <code>onFailure: "block"</code></td>
+</tr>
+<tr>
+<td>10/14（2.1.299）</td>
+<td><strong>閒置壓縮（Idle compaction）</strong></td>
+</tr>
+<tr>
+<td>10/16（2.1.302）</td>
+<td>fork 子代理在 <code>-p</code>、SDK、桌面版、VS Code 預設開啟</td>
+</tr>
+<tr>
+<td>10/19（2.1.304）</td>
+<td><code>/auto-mode-setup</code> 支援更多供應商；Code Review 可設 Quick／Standard／Deep</td>
+</tr>
+<tr>
+<td>10/21（2.1.307）</td>
+<td><code>@claude review stop</code>；安全事件遙測</td>
+</tr>
+<tr>
+<td>10/23（2.1.310）</td>
+<td>沙盒強化；<code>claude ultrareview</code> 需信任工作區</td>
+</tr>
+<tr>
+<td>10/26（2.1.311）</td>
+<td><code>ultrathink</code> 在 5.5 系列以 xhigh 執行該回合</td>
+</tr>
+<tr>
+<td>10/27（2.1.312）</td>
+<td>大量修正（例如大型 CLAUDE.md 不再被覆寫）</td>
+</tr>
+</tbody>
+</table>
+<p>最新內容請在 Claude Code 中輸入 <code>/release-notes</code>。</p>
+<h2>15.5 參考資料</h2>
+<ul>
+<li><a href="https://code.claude.com/docs/en/overview">Claude Code 官方文件</a>（有繁體中文版）</li>
+<li><a href="https://code.claude.com/docs/en/changelog">Changelog（版本更新紀錄）</a></li>
+<li><a href="https://code.claude.com/docs/en/whats-new/index">What's new（每週重點）</a></li>
+<li><a href="https://code.claude.com/docs/en/settings">Settings</a>、<a href="https://code.claude.com/docs/en/settings-reference">All settings</a></li>
+<li><a href="https://code.claude.com/docs/en/commands">Commands</a>、<a href="https://code.claude.com/docs/en/cli-reference">CLI reference</a>、<a href="https://code.claude.com/docs/en/interactive-mode">Interactive mode</a></li>
+<li><a href="https://code.claude.com/docs/en/permission-modes">Permission modes</a>、<a href="https://code.claude.com/docs/en/sandboxing">Sandboxing</a></li>
+<li><a href="https://code.claude.com/docs/en/model-config">Model configuration</a>、<a href="https://code.claude.com/docs/en/fast-mode">Fast mode</a></li>
+<li><a href="https://code.claude.com/docs/en/memory">Memory</a>、<a href="https://code.claude.com/docs/en/skills">Skills</a>、<a href="https://code.claude.com/docs/en/sub-agents">Subagents</a>、<a href="https://code.claude.com/docs/en/hooks-guide">Hooks</a>、<a href="https://code.claude.com/docs/en/mcp">MCP</a></li>
+<li><a href="https://code.claude.com/docs/en/plugins/overview">Plugins</a>、<a href="https://code.claude.com/docs/en/plugins/mods/overview">Mods</a>、<a href="https://code.claude.com/docs/en/workflows">Workflows</a>、<a href="https://code.claude.com/docs/en/agent-view">Agent view</a></li>
+<li><a href="https://code.claude.com/docs/en/desktop">Desktop app</a>、<a href="https://code.claude.com/docs/en/output-styles">Output styles</a></li>
+<li>免費課程：<a href="https://academy.claude.com/courses/claude-code-101">Claude Code 101（Claude Academy）</a></li>
+</ul></section>
+<footer>Claude Code 完全新手教學・第二版・整理日期 2026/10/29・內容來源：Claude Code 官方文件與 changelog</footer>
+</main>
+<div id="lightbox"><img alt=""></div>
+<script>
+(function(){
+  var store={get:function(k){try{return localStorage.getItem(k)}catch(e){return null}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+  var sections=[].slice.call(document.querySelectorAll('main section'));
+  var links={};[].slice.call(document.querySelectorAll('#toc a')).forEach(function(a){links[a.getAttribute('href').slice(1)]=a;a.addEventListener('click',function(){document.querySelector('aside').classList.remove('open')})});
+  sections.forEach(function(s){
+    var h=s.querySelector('h1'); if(!h) return;
+    var lab=document.createElement('label'); lab.className='markdone'; var cb=document.createElement('input'); cb.type='checkbox';
+    cb.checked=store.get('cc2-done-'+s.id)==='1'; lab.appendChild(cb); lab.appendChild(document.createTextNode(' 已讀')); h.appendChild(lab);
+    function upd(){ if(links[s.id]) links[s.id].style.opacity=cb.checked?.55:1; } upd();
+    cb.addEventListener('change',function(){store.set('cc2-done-'+s.id,cb.checked?'1':'0');upd();});
+  });
+  function onScroll(){var y=window.scrollY,h=document.documentElement.scrollHeight-window.innerHeight;document.getElementById('progress').style.width=(h>0?y/h*100:0)+'%';
+    var cur=null;sections.forEach(function(s){if(!s.classList.contains('hidden')&&s.getBoundingClientRect().top<120)cur=s.id});
+    Object.keys(links).forEach(function(k){links[k].classList.toggle('active',k===cur)});}
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+  document.querySelectorAll('pre').forEach(function(pre){var b=document.createElement('button');b.className='copy';b.textContent='複製';
+    b.addEventListener('click',function(){var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+      var done=function(){b.textContent='已複製';setTimeout(function(){b.textContent='複製'},1200)};
+      if(navigator.clipboard){navigator.clipboard.writeText(t).then(done,done)}else{done()}});pre.appendChild(b);});
+  var th=store.get('cc-theme'); if(!th&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)th='dark'; if(th)document.documentElement.setAttribute('data-theme',th);
+  document.getElementById('theme').addEventListener('click',function(){var c=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',c);store.set('cc-theme',c)});
+  var q=document.getElementById('q');q.addEventListener('input',function(){var v=q.value.trim().toLowerCase();
+    sections.forEach(function(s){var hit=!v||s.textContent.toLowerCase().indexOf(v)>=0;s.classList.toggle('hidden',!hit);if(links[s.id])links[s.id].style.display=hit?'':'none'});onScroll();});
+  var lb=document.getElementById('lightbox');document.querySelectorAll('figure img').forEach(function(img){img.addEventListener('click',function(){lb.querySelector('img').src=img.src;lb.style.display='flex'})});
+  lb.addEventListener('click',function(){lb.style.display='none'});
+})();
+</script>
+</body>
+</html>
